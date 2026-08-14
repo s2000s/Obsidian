@@ -4800,7 +4800,7 @@ do
                 BackgroundColor3 = Button.Disabled and "ElementDisabledColor" or "ElementColor",
                 Size = UDim2.fromScale(1, 1),
                 Text = Button.Text,
-                TextSize = 14,
+                TextSize = 13,
                 TextTransparency = 0.4,
                 Visible = Button.Visible,
                 Parent = Holder,
@@ -10378,7 +10378,8 @@ function Library:CreateWindow(WindowInfo)
                     Position = UDim2.fromOffset(BoxIcon and 28 or 0, 0),
                     Size = UDim2.new(1, BoxIcon and -28 or 0, 0, 34),
                     Text = Info.Name,
-                    TextSize = 14,
+                    TextSize = 13,
+                    TextTransparency = 0.35,
                     TextXAlignment = Enum.TextXAlignment.Left,
                     Parent = GroupboxHolder,
                 })
