@@ -9104,7 +9104,7 @@ function Library:CreateWindow(WindowInfo)
 
             if SearchIconImage then
                 SearchIconImage.Position = Expanded
-                    and UDim2.new(0, 8, 0.5, 0)
+                    and UDim2.new(0, 4, 0.5, 0)
                     or UDim2.new(0, 6, 0.5, 0)
             end
 
