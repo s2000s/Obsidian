@@ -8814,6 +8814,7 @@ function Library:CreateWindow(WindowInfo)
     local SearchBoxStroke
     local SearchBoxPadding
     local SearchIconImage
+    local SearchPlaceholderLabel
     local SearchBoxExpanded = true
     local SearchBoxTween
     local SetSearchBoxExpanded
@@ -9030,10 +9031,7 @@ function Library:CreateWindow(WindowInfo)
 
         SearchBox = New("TextBox", {
             BackgroundColor3 = "ElementColor",
-            PlaceholderText = "Search",
-            PlaceholderTextColor3 = function()
-                return Library:GetDarkerColor(Library.Scheme.FontColor)
-            end,
+            PlaceholderText = "",
             Size = WindowInfo.SearchbarSize,
             TextScaled = false,
             TextSize = 12,
@@ -9042,6 +9040,22 @@ function Library:CreateWindow(WindowInfo)
         })
         New("UIFlexItem", {
             FlexMode = Enum.UIFlexMode.Shrink,
+            Parent = SearchBox,
+        })
+
+        SearchPlaceholderLabel = New("TextLabel", {
+            AnchorPoint = Vector2.new(0, 0.5),
+            BackgroundTransparency = 1,
+            Position = UDim2.new(0, 32, 0.5, 0),
+            Size = UDim2.new(1, -40, 0, 16),
+            Text = "Search",
+            TextColor3 = function()
+                return Library:GetDarkerColor(Library.Scheme.FontColor)
+            end,
+            TextSize = 12,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            TextYAlignment = Enum.TextYAlignment.Center,
+            Visible = not WindowInfo.CollapsibleSearch and not WindowInfo.DisableSearch,
             Parent = SearchBox,
         })
         table.insert(
@@ -9088,11 +9102,11 @@ function Library:CreateWindow(WindowInfo)
             end
 
             SearchBoxExpanded = Expanded
-            SearchBox.PlaceholderText = Expanded and "Search" or ""
             SearchBox.BackgroundTransparency = Expanded and 0 or 1
             SearchBoxStroke.Transparency = Expanded and 0 or 1
             SearchBoxPadding.PaddingLeft = UDim.new(0, Expanded and 32 or 0)
             SearchBoxPadding.PaddingRight = UDim.new(0, Expanded and 8 or 0)
+            SearchPlaceholderLabel.Visible = Expanded and SearchBox.Text == ""
 
             if SearchIconImage then
                 SearchIconImage.Position = Expanded
@@ -11818,6 +11832,9 @@ function Library:CreateWindow(WindowInfo)
     --// Execution \\--
     Library:GiveSignal(SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
         Library:UpdateSearch(SearchBox.Text)
+        if SearchPlaceholderLabel then
+            SearchPlaceholderLabel.Visible = SearchBoxExpanded and SearchBox.Text == ""
+        end
     end))
 
     Library:GiveSignal(UserInputService.InputBegan:Connect(function(Input: InputObject)
