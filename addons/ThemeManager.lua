@@ -31,6 +31,12 @@ end
 
 --// Theme Manager
 local SchemeIndexes = { "FontColor", "MainColor", "AccentColor", "BackgroundColor", "OutlineColor" }
+
+local function UpdateElementColors(Library)
+    Library.Scheme.ElementColor = Library:GetBetterColor(Library.Scheme.MainColor, 2)
+    Library.Scheme.ElementHoverColor = Library:GetBetterColor(Library.Scheme.MainColor, 4)
+    Library.Scheme.ElementDisabledColor = Library:GetBetterColor(Library.Scheme.BackgroundColor, 0)
+end
 local ThemeManager = {
     Library = nil,
 
@@ -408,6 +414,9 @@ function ThemeManager:SetDefaultTheme(Theme: any)
     end
 
     --// Apply
+    LibraryScheme.ElementColor = Library:GetBetterColor(LibraryScheme.MainColor, 2)
+    LibraryScheme.ElementHoverColor = Library:GetBetterColor(LibraryScheme.MainColor, 4)
+    LibraryScheme.ElementDisabledColor = Library:GetBetterColor(LibraryScheme.BackgroundColor, 0)
     Library.Scheme = LibraryScheme
     ThemeManager.BuiltInThemes["Default"] = { 1, FinalTheme }
 
@@ -495,6 +504,7 @@ function ThemeManager:ThemeUpdate()
         Library.Scheme[SchemeIndex] = Element.Value
     end
 
+    UpdateElementColors(Library)
     Library:UpdateColorsUsingRegistry()
 end
 

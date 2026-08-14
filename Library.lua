@@ -28,7 +28,7 @@ local Toggles = {}
 local Options = {}
 local Tooltips = {}
 
-local BaseURL = "https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/heads/main/"
+local BaseURL = "https://raw.githubusercontent.com/s2000s/Obsidian/refs/heads/main/"
 local CustomImageManager = {}
 local CustomImageManagerAssets = {
     TransparencyTexture = {
@@ -264,6 +264,9 @@ local Library = {
     Scheme = {
         BackgroundColor = Color3.fromRGB(15, 15, 15),
         MainColor = Color3.fromRGB(25, 25, 25),
+        ElementColor = Color3.fromRGB(29, 29, 29),
+        ElementHoverColor = Color3.fromRGB(33, 33, 33),
+        ElementDisabledColor = Color3.fromRGB(15, 15, 15),
         AccentColor = Color3.fromRGB(125, 85, 255),
         OutlineColor = Color3.fromRGB(40, 40, 40),
         FontColor = Color3.new(1, 1, 1),
@@ -3113,7 +3116,7 @@ do
         end
 
         local Picker = New("TextButton", {
-            BackgroundColor3 = "MainColor",
+            BackgroundColor3 = "ElementColor",
             Size = UDim2.fromOffset(18, 18),
             Text = (IsForButton and SlideOverflow) and "" or KeyPicker.Value,
             TextSize = 14,
@@ -3194,7 +3197,7 @@ do
 
             local Checkbox = New("Frame", {
                 AnchorPoint = Vector2.new(0, 0.5),
-                BackgroundColor3 = "MainColor",
+                BackgroundColor3 = "ElementColor",
                 Position = UDim2.fromScale(0, 0.5),
                 Size = UDim2.fromOffset(14, 14),
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
@@ -3275,7 +3278,7 @@ do
             local ModeButton = {}
 
             local Button = New("TextButton", {
-                BackgroundColor3 = "MainColor",
+                BackgroundColor3 = "ElementColor",
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, 0, 0, IsForButton and 21 or (TotalModeButtons == 1 and 18 or 19)),
                 Text = Mode,
@@ -4092,7 +4095,7 @@ do
         })
 
         local HueBox = New("TextBox", {
-            BackgroundColor3 = "MainColor",
+            BackgroundColor3 = "ElementColor",
             ClearTextOnFocus = false,
             Size = UDim2.fromScale(1, 1),
             Text = "#??????",
@@ -4114,7 +4117,7 @@ do
         )
 
         local RgbBox = New("TextBox", {
-            BackgroundColor3 = "MainColor",
+            BackgroundColor3 = "ElementColor",
             ClearTextOnFocus = false,
             Size = UDim2.fromScale(1, 1),
             Text = "?, ?, ?",
@@ -4760,7 +4763,7 @@ do
         local function CreateButton(Button)
             local Base = New("TextButton", {
                 Active = not Button.Disabled,
-                BackgroundColor3 = Button.Disabled and "BackgroundColor" or "MainColor",
+                BackgroundColor3 = Button.Disabled and "ElementDisabledColor" or "ElementColor",
                 Size = UDim2.fromScale(1, 1),
                 Text = Button.Text,
                 TextSize = 14,
@@ -4793,6 +4796,7 @@ do
                 end
 
                 Button.Tween = TweenService:Create(Button.Base, Library.TweenInfo, {
+                    BackgroundColor3 = Library.Scheme.ElementHoverColor,
                     TextTransparency = 0,
                 })
                 Button.Tween:Play()
@@ -4803,6 +4807,7 @@ do
                 end
 
                 Button.Tween = TweenService:Create(Button.Base, Library.TweenInfo, {
+                    BackgroundColor3 = Library.Scheme.ElementColor,
                     TextTransparency = 0.4,
                 })
                 Button.Tween:Play()
@@ -4876,13 +4881,13 @@ do
 
                 StopTween(SubButton.Tween)
 
-                SubButton.Base.BackgroundColor3 = SubButton.Disabled and Library.Scheme.BackgroundColor
-                    or Library.Scheme.MainColor
+                SubButton.Base.BackgroundColor3 = SubButton.Disabled and Library.Scheme.ElementDisabledColor
+                    or Library.Scheme.ElementColor
                 SubButton.Base.TextTransparency = SubButton.Disabled and 0.8 or 0.4
                 SubButton.Stroke.Transparency = SubButton.Disabled and 0.5 or 0
 
-                Library.Registry[SubButton.Base].BackgroundColor3 = SubButton.Disabled and "BackgroundColor"
-                    or "MainColor"
+                Library.Registry[SubButton.Base].BackgroundColor3 = SubButton.Disabled and "ElementDisabledColor"
+                    or "ElementColor"
             end
 
             function SubButton:SetDisabled(Disabled: boolean)
@@ -4965,12 +4970,12 @@ do
 
             StopTween(Button.Tween)
 
-            Button.Base.BackgroundColor3 = Button.Disabled and Library.Scheme.BackgroundColor
-                or Library.Scheme.MainColor
+            Button.Base.BackgroundColor3 = Button.Disabled and Library.Scheme.ElementDisabledColor
+                or Library.Scheme.ElementColor
             Button.Base.TextTransparency = Button.Disabled and 0.8 or 0.4
             Button.Stroke.Transparency = Button.Disabled and 0.5 or 0
 
-            Library.Registry[Button.Base].BackgroundColor3 = Button.Disabled and "BackgroundColor" or "MainColor"
+            Library.Registry[Button.Base].BackgroundColor3 = Button.Disabled and "ElementDisabledColor" or "ElementColor"
         end
 
         function Button:SetDisabled(Disabled: boolean)
@@ -5121,7 +5126,7 @@ do
         })
 
         local Checkbox = New("Frame", {
-            BackgroundColor3 = "MainColor",
+            BackgroundColor3 = "ElementColor",
             Size = UDim2.fromScale(1, 1),
             SizeConstraint = Enum.SizeConstraint.RelativeYY,
             Parent = Button,
@@ -5165,8 +5170,8 @@ do
                 Label.TextTransparency = 0.8
                 CheckImage.ImageTransparency = Toggle.Value and 0.8 or 1
 
-                Checkbox.BackgroundColor3 = Library.Scheme.BackgroundColor
-                Library.Registry[Checkbox].BackgroundColor3 = "BackgroundColor"
+                Checkbox.BackgroundColor3 = Library.Scheme.ElementDisabledColor
+                Library.Registry[Checkbox].BackgroundColor3 = "ElementDisabledColor"
 
                 return
             end
@@ -5178,8 +5183,8 @@ do
                 ImageTransparency = Toggle.Value and 0 or 1,
             }):Play()
 
-            Checkbox.BackgroundColor3 = Library.Scheme.MainColor
-            Library.Registry[Checkbox].BackgroundColor3 = "MainColor"
+            Checkbox.BackgroundColor3 = Library.Scheme.ElementColor
+            Library.Registry[Checkbox].BackgroundColor3 = "ElementColor"
         end
 
         function Toggle:OnChanged(Func)
@@ -5377,7 +5382,7 @@ do
 
         local Switch = New("Frame", {
             AnchorPoint = Vector2.new(1, 0),
-            BackgroundColor3 = "MainColor",
+            BackgroundColor3 = "ElementColor",
             Position = UDim2.fromScale(1, 0),
             Size = UDim2.fromOffset(32, 18),
             Parent = Button,
@@ -5423,10 +5428,14 @@ do
             Switch.BackgroundTransparency = Toggle.Disabled and 0.75 or 0
             SwitchStroke.Transparency = Toggle.Disabled and 0.75 or 0
 
-            Switch.BackgroundColor3 = Toggle.Value and Library.Scheme.AccentColor or Library.Scheme.MainColor
+            Switch.BackgroundColor3 = Toggle.Disabled and Library.Scheme.ElementDisabledColor
+                or Toggle.Value and Library.Scheme.AccentColor
+                or Library.Scheme.ElementColor
             SwitchStroke.Color = Toggle.Value and Library.Scheme.AccentColor or Library.Scheme.OutlineColor
 
-            Library.Registry[Switch].BackgroundColor3 = Toggle.Value and "AccentColor" or "MainColor"
+            Library.Registry[Switch].BackgroundColor3 = Toggle.Disabled and "ElementDisabledColor"
+                or Toggle.Value and "AccentColor"
+                or "ElementColor"
             Library.Registry[SwitchStroke].Color = Toggle.Value and "AccentColor" or "OutlineColor"
 
             if Toggle.Disabled then
@@ -5643,7 +5652,7 @@ do
 
         local Box = New("TextBox", {
             AnchorPoint = Vector2.new(0, 1),
-            BackgroundColor3 = "MainColor",
+            BackgroundColor3 = "ElementColor",
             ClearTextOnFocus = not Input.Disabled and Input.ClearTextOnFocus,
             PlaceholderText = Input.Placeholder,
             Position = UDim2.fromScale(0, 1),
@@ -5683,6 +5692,8 @@ do
 
             Label.TextTransparency = Input.Disabled and 0.8 or 0
             Box.TextTransparency = Input.Disabled and 0.8 or 0
+            Box.BackgroundColor3 = Input.Disabled and Library.Scheme.ElementDisabledColor or Library.Scheme.ElementColor
+            Library.Registry[Box].BackgroundColor3 = Input.Disabled and "ElementDisabledColor" or "ElementColor"
         end
 
         function Input:OnChanged(Func)
@@ -5873,7 +5884,7 @@ do
         local Bar = New("TextButton", {
             Active = not Slider.Disabled,
             AnchorPoint = Vector2.new(0, 1),
-            BackgroundColor3 = "MainColor",
+            BackgroundColor3 = "ElementColor",
             Position = UDim2.fromScale(0, 1),
             Size = UDim2.new(1, 0, 0, 15),
             Text = "",
@@ -5957,6 +5968,8 @@ do
                 InputTextBox.TextTransparency = Slider.Disabled and 0.8 or 0
             end
 
+            Bar.BackgroundColor3 = Slider.Disabled and Library.Scheme.ElementDisabledColor or Library.Scheme.ElementColor
+            Library.Registry[Bar].BackgroundColor3 = Slider.Disabled and "ElementDisabledColor" or "ElementColor"
             Fill.BackgroundColor3 = Slider.Disabled and Library.Scheme.OutlineColor or Library.Scheme.AccentColor
             Library.Registry[Fill].BackgroundColor3 = Slider.Disabled and "OutlineColor" or "AccentColor"
         end
@@ -6306,7 +6319,7 @@ do
 
         local DisplayContainer = New("TextButton", {
             AnchorPoint = Vector2.new(0, 1),
-            BackgroundColor3 = "MainColor",
+            BackgroundColor3 = "ElementColor",
             Position = UDim2.fromScale(0, 1),
             Size = UDim2.new(1, 0, 0, 21),
             Text = "",
@@ -6470,6 +6483,8 @@ do
             DisplayButton.TextTransparency = Dropdown.Disabled and 0.8 or 0
             DisplayImage.ImageTransparency = Dropdown.Disabled and 0.8 or 0
             ArrowImage.ImageTransparency = Dropdown.Disabled and 0.8 or MenuTable.Active and 0 or 0.5
+            DisplayContainer.BackgroundColor3 = Dropdown.Disabled and Library.Scheme.ElementDisabledColor or Library.Scheme.ElementColor
+            Library.Registry[DisplayContainer].BackgroundColor3 = Dropdown.Disabled and "ElementDisabledColor" or "ElementColor"
         end
 
         function Dropdown:Display()
@@ -6768,7 +6783,7 @@ do
             }
 
             local Container = New("Frame", {
-                BackgroundColor3 = "MainColor",
+                BackgroundColor3 = "ElementColor",
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, 0, 0, ItemHeight),
                 Visible = false,
@@ -7138,6 +7153,16 @@ do
 
         table.insert(Dropdown.Connections, DisplayContainer.MouseButton1Click:Connect(ToggleDropdown))
         table.insert(Dropdown.Connections, DisplayButton.MouseButton1Click:Connect(ToggleDropdown))
+        table.insert(Dropdown.Connections, DisplayContainer.MouseEnter:Connect(function()
+            if not Dropdown.Disabled then
+                DisplayContainer.BackgroundColor3 = Library.Scheme.ElementHoverColor
+            end
+        end))
+        table.insert(Dropdown.Connections, DisplayContainer.MouseLeave:Connect(function()
+            if not Dropdown.Disabled then
+                DisplayContainer.BackgroundColor3 = Library.Scheme.ElementColor
+            end
+        end))
 
         if SearchBox then
             table.insert(Dropdown.Connections, SearchBox:GetPropertyChangedSignal("Text"):Connect(Dropdown.BuildDropdownList))
@@ -8937,7 +8962,7 @@ function Library:CreateWindow(WindowInfo)
         })
 
         SearchBox = New("TextBox", {
-            BackgroundColor3 = "MainColor",
+            BackgroundColor3 = "ElementColor",
             PlaceholderText = "Search",
             Size = WindowInfo.SearchbarSize,
             TextScaled = true,
@@ -9853,7 +9878,7 @@ function Library:CreateWindow(WindowInfo)
                 local TabStoringIndex = IsNameEmpty and tostring(TabIndex) or Name
 
                 local Button = New("TextButton", {
-                    BackgroundColor3 = "MainColor",
+                    BackgroundColor3 = "ElementColor",
                     BackgroundTransparency = 0,
                     Size = UDim2.fromOffset(0, 34),
                     Text = "",
@@ -10654,7 +10679,7 @@ function Library:CreateWindow(WindowInfo)
             })
 
             local Box = New("TextBox", {
-                BackgroundColor3 = "MainColor",
+                BackgroundColor3 = "ElementColor",
                 PlaceholderText = "Key",
                 Size = UDim2.new(1, -71, 1, 0),
                 TextSize = 14,
@@ -10680,7 +10705,7 @@ function Library:CreateWindow(WindowInfo)
 
             local Button = New("TextButton", {
                 AnchorPoint = Vector2.new(1, 0),
-                BackgroundColor3 = "MainColor",
+                BackgroundColor3 = "ElementColor",
                 Position = UDim2.fromScale(1, 0),
                 Size = UDim2.new(0, 63, 1, 0),
                 Text = "Execute",
