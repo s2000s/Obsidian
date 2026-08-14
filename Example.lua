@@ -10,20 +10,13 @@ Library.ForceCheckbox = false -- Forces AddToggle to AddCheckbox
 Library.ShowToggleFrameInKeybinds = true -- Make toggle keybinds work inside the keybinds UI (aka adds a toggle to the UI). Good for mobile users (Default value = true)
 
 local Window = Library:CreateWindow({
-	-- Set Center to true if you want the menu to appear in the center
-	-- Set AutoShow to true if you want the menu to appear when it is created
-	-- Set Resizable to true if you want to have in-game resizable Window
-	-- Set MobileButtonsSide to "Left" or "Right" if you want the ui toggle & lock buttons to be on the left or right side of the window
-	-- Set ShowCustomCursor to false if you don't want to use the Linoria cursor
-	-- NotifySide = Changes the side of the notifications (Left, Right) (Default value = Left)
-	-- Position and Size are also valid options here
-	-- but you do not need to define them unless you are changing them :)
-
-	Title = "mspaint",
-	Footer = "version: example",
-	Icon = 95816097006870,
+	Title = "",
+	Footer = "",
 	NotifySide = "Right",
-	ShowCustomCursor = true,
+	ShowCustomCursor = false,
+    MobileButtonsSide = "Left",
+    SidebarCompacted = true,
+    CornerRadius = 5,
 })
 
 -- CALLBACK NOTE:
@@ -36,7 +29,6 @@ local Window = Library:CreateWindow({
 local Tabs = {
 	-- Creates a new tab titled Main
 	Main = Window:AddTab("Main", "user"),
-	Key = Window:AddKeyTab("Key System"),
 	["UI Settings"] = Window:AddTab("UI Settings", "settings"),
 }
 
@@ -674,25 +666,6 @@ Tab2:AddToggle("Tab2Toggle", { Text = "Tab2 Toggle" })
 
 Library:OnUnload(function()
 	print("Unloaded!")
-end)
-
--- Anything we can do in a Groupbox, we can do in a Key tab (AddToggle, AddSlider, AddLabel, etc etc...)
-Tabs.Key:AddLabel({
-	Text = "Key: Banana",
-	DoesWrap = true,
-	Size = 16,
-})
-
-Tabs.Key:AddKeyBox(function(ReceivedKey)
-	-- KeyBox only takes the callback for the button, you need to implement your own key check inside the callback
-	local Success = ReceivedKey == "Banana"
-
-	print("Expected Key: Banana - Received Key:", ReceivedKey, "| Success:", Success)
-	Library:Notify({
-		Title = "Expected Key: Banana",
-		Description = "Received Key: " .. ReceivedKey .. "\nSuccess: " .. tostring(Success),
-		Time = 4,
-	})
 end)
 
 -- DraggableLabel

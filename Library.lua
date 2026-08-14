@@ -10059,26 +10059,12 @@ function Library:CreateWindow(WindowInfo)
             local GroupboxList
 
             local GroupboxCollapseArrow
-            local GroupboxLine
 
             do
                 GroupboxHolder = New("Frame", {
-                    BackgroundColor3 = "BackgroundColor",
+                    BackgroundTransparency = 1,
                     Size = UDim2.fromScale(1, 0),
                     Parent = BoxHolder,
-                })
-                table.insert(
-                    Library.Corners,
-                    New("UICorner", {
-                        CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
-                        Parent = GroupboxHolder,
-                    })
-                )
-                Library:AddOutline(GroupboxHolder)
-
-                GroupboxLine = Library:MakeLine(GroupboxHolder, {
-                    Position = UDim2.fromOffset(0, 34),
-                    Size = UDim2.new(1, 0, 0, 1),
                 })
 
                 local BoxIcon = Library:GetCustomIcon(Info.IconName)
@@ -10124,7 +10110,7 @@ function Library:CreateWindow(WindowInfo)
                 end
 
                 GroupboxContainer = New("Frame", {
-                    BackgroundTransparency = 1,
+                    BackgroundColor3 = "BackgroundColor",
                     Position = UDim2.fromOffset(0, 35),
                     Size = UDim2.new(1, 0, 1, -35),
                     Parent = GroupboxHolder,
@@ -10141,6 +10127,13 @@ function Library:CreateWindow(WindowInfo)
                     PaddingTop = UDim.new(0, 7),
                     Parent = GroupboxContainer,
                 })
+                table.insert(
+                    Library.Corners,
+                    New("UICorner", {
+                        CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
+                        Parent = GroupboxContainer,
+                    })
+                )
             end
 
             local Groupbox = {
@@ -10172,7 +10165,6 @@ function Library:CreateWindow(WindowInfo)
 
                 local TargetSize = UDim2.new(1, 0, 0, if Groupbox.Collapsed then 34 else (GroupboxList.AbsoluteContentSize.Y / Library.DPIScale) + 49)
 
-                GroupboxLine.Visible = not Groupbox.Collapsed
                 if Library.Animations and Library.Animations.Groupbox then
                     local TweenInfo = Library.GroupboxTweenInfo or TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
                     local Tween = TweenService:Create(GroupboxHolder, TweenInfo, { Size = TargetSize })
