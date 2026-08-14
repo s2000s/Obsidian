@@ -6310,27 +6310,28 @@ do
 
         local Holder = New("Frame", {
             BackgroundTransparency = 1,
-            Size = UDim2.new(1, 0, 0, Dropdown.Text and 39 or 21),
+            Size = UDim2.new(1, 0, 0, 21),
             Visible = Dropdown.Visible,
             Parent = Container,
         })
 
         local Label = New("TextLabel", {
             BackgroundTransparency = 1,
-            Size = UDim2.new(1, 0, 0, 14),
+            Size = UDim2.new(0.5, -8, 0, 21),
             Text = Dropdown.Text,
             TextSize = 14,
             TextXAlignment = Enum.TextXAlignment.Left,
+            TextYAlignment = Enum.TextYAlignment.Center,
             Visible = not not Info.Text,
             ZIndex = 3,
             Parent = Holder,
         })
 
         local DisplayContainer = New("TextButton", {
-            AnchorPoint = Vector2.new(0, 1),
+            AnchorPoint = Vector2.new(1, 0.5),
             BackgroundColor3 = "ElementColor",
-            Position = UDim2.fromScale(0, 1),
-            Size = UDim2.new(1, 0, 0, 21),
+            Position = UDim2.new(1, 0, 0.5, 0),
+            Size = UDim2.new(0.45, 0, 0, 21),
             Text = "",
             TextTransparency = 1,
             ZIndex = 2,
@@ -6388,6 +6389,26 @@ do
             Size = UDim2.fromOffset(16, 16),
             Parent = DisplayContainer,
         })
+
+        local function UpdateDropdownLayout()
+            local HasTitle = typeof(Dropdown.Text) == "string" and Dropdown.Text ~= ""
+
+            Holder.Size = UDim2.new(1, 0, 0, 21)
+            Label.Visible = HasTitle
+            Label.Size = UDim2.new(HasTitle and 0.5 or 1, HasTitle and -8 or 0, 0, 21)
+
+            if HasTitle then
+                DisplayContainer.AnchorPoint = Vector2.new(1, 0.5)
+                DisplayContainer.Position = UDim2.new(1, 0, 0.5, 0)
+                DisplayContainer.Size = UDim2.new(0.45, 0, 0, 21)
+            else
+                DisplayContainer.AnchorPoint = Vector2.new(0, 1)
+                DisplayContainer.Position = UDim2.fromScale(0, 1)
+                DisplayContainer.Size = UDim2.new(1, 0, 0, 21)
+            end
+        end
+
+        UpdateDropdownLayout()
 
         local SearchBox
         if Info.Searchable then
@@ -7137,10 +7158,8 @@ do
 
         function Dropdown:SetText(Text: string)
             Dropdown.Text = Text
-            Holder.Size = UDim2.new(1, 0, 0, Text and 39 or 21)
-
             Label.Text = Text and Text or ""
-            Label.Visible = not not Text
+            UpdateDropdownLayout()
         end
 
         function Dropdown:SetDragSelect(Value: boolean)
@@ -8163,7 +8182,7 @@ do
             Library:AddOutline(DepGroupboxContainer)
 
             DepGroupboxList = New("UIListLayout", {
-                Padding = UDim.new(0, 8),
+                Padding = UDim.new(0, 12),
                 Parent = DepGroupboxContainer,
             })
             New("UIPadding", {
@@ -10343,7 +10362,7 @@ function Library:CreateWindow(WindowInfo)
                 })
 
                 GroupboxList = New("UIListLayout", {
-                    Padding = UDim.new(0, 8),
+                    Padding = UDim.new(0, 12),
                     Parent = GroupboxContainer,
                 })
                 New("UIPadding", {
