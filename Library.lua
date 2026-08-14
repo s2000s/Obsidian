@@ -9434,10 +9434,10 @@ function Library:CreateWindow(WindowInfo)
             end
 
             Button.Label.Visible = not IsCompact
-            Button.Padding.PaddingBottom = UDim.new(0, IsCompact and 8 or 14)
+            Button.Padding.PaddingBottom = UDim.new(0, IsCompact and 7 or 10)
             Button.Padding.PaddingLeft = UDim.new(0, IsCompact and 8 or 14)
             Button.Padding.PaddingRight = UDim.new(0, IsCompact and 8 or 14)
-            Button.Padding.PaddingTop = UDim.new(0, IsCompact and 8 or 14)
+            Button.Padding.PaddingTop = UDim.new(0, IsCompact and 7 or 10)
             Button.Icon.AnchorPoint = Vector2.new(0, 0.5)
             Button.Icon.Position = IsCompact and UDim2.new(0.5, -11, 0.5, 0) or UDim2.new(0, 14, 0.5, 0)
             Button.Icon.Size = UDim2.fromOffset(IsCompact and 22 or 16, IsCompact and 22 or 16)
@@ -9576,7 +9576,7 @@ function Library:CreateWindow(WindowInfo)
             TabButton = New("TextButton", {
                 BackgroundColor3 = "MainColor",
                 BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, 48),
+                Size = UDim2.new(1, 0, 0, 40),
                 Text = "",
                 LayoutOrder = Order,
                 Parent = Tabs,
@@ -9589,10 +9589,10 @@ function Library:CreateWindow(WindowInfo)
                 })
             )
             local ButtonPadding = New("UIPadding", {
-                PaddingBottom = UDim.new(0, IsCompact and 8 or 14),
+                PaddingBottom = UDim.new(0, IsCompact and 7 or 10),
                 PaddingLeft = UDim.new(0, IsCompact and 8 or 14),
                 PaddingRight = UDim.new(0, IsCompact and 8 or 14),
-                PaddingTop = UDim.new(0, IsCompact and 8 or 14),
+                PaddingTop = UDim.new(0, IsCompact and 7 or 10),
                 Parent = TabButton,
             })
 
@@ -10722,7 +10722,7 @@ function Library:CreateWindow(WindowInfo)
             TabButton = New("TextButton", {
                 BackgroundColor3 = "MainColor",
                 BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, 48),
+                Size = UDim2.new(1, 0, 0, 40),
                 Text = "",
                 Parent = Tabs,
             })
@@ -10734,10 +10734,10 @@ function Library:CreateWindow(WindowInfo)
                 })
             )
             local ButtonPadding = New("UIPadding", {
-                PaddingBottom = UDim.new(0, IsCompact and 8 or 14),
+                PaddingBottom = UDim.new(0, IsCompact and 7 or 10),
                 PaddingLeft = UDim.new(0, IsCompact and 8 or 14),
                 PaddingRight = UDim.new(0, IsCompact and 8 or 14),
-                PaddingTop = UDim.new(0, IsCompact and 8 or 14),
+                PaddingTop = UDim.new(0, IsCompact and 7 or 10),
                 Parent = TabButton,
             })
 
