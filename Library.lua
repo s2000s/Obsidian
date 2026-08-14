@@ -9112,18 +9112,11 @@ function Library:CreateWindow(WindowInfo)
                 Size = UDim2.fromOffset(16, 16),
                 Parent = Button,
             })
-            New("UICorner", {
-                CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
-                Parent = Button,
-            })
 
             Library:GiveSignal(Button.MouseEnter:Connect(function()
-                Button.BackgroundColor3 = Library.Scheme.ElementColor
-                Button.BackgroundTransparency = 0
                 IconImage.ImageTransparency = 0
             end))
             Library:GiveSignal(Button.MouseLeave:Connect(function()
-                Button.BackgroundTransparency = 1
                 IconImage.ImageTransparency = 0.35
             end))
 
