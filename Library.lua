@@ -6549,7 +6549,7 @@ do
             end
 
             MultiDropdownListTop = 114
-            MultiDropdownFooterHeight = 58
+            MultiDropdownFooterHeight = 50
 
             MenuTable.Menu.ClipsDescendants = true
 
@@ -6615,6 +6615,26 @@ do
             New("UIStroke", {
                 Color = "OutlineColor",
                 Parent = SearchBox,
+            })
+
+            local MultiOptionsBackground = New("Frame", {
+                BackgroundColor3 = "BackgroundColor",
+                Position = UDim2.fromOffset(14, MultiDropdownListTop),
+                Size = UDim2.new(1, -28, 1, -(MultiDropdownListTop + MultiDropdownFooterHeight)),
+                ZIndex = MenuTable.Menu.ZIndex,
+                Parent = MenuTable.Menu,
+            })
+            table.insert(
+                Library.Corners,
+                New("UICorner", {
+                    CornerRadius = UDim.new(0, 8),
+                    Parent = MultiOptionsBackground,
+                })
+            )
+            New("UIStroke", {
+                Color = "OutlineColor",
+                Transparency = 0.5,
+                Parent = MultiOptionsBackground,
             })
 
             local MultiFooter = New("Frame", {
