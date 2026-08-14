@@ -10110,7 +10110,8 @@ function Library:CreateWindow(WindowInfo)
                 end
 
                 GroupboxContainer = New("Frame", {
-                    BackgroundColor3 = "BackgroundColor",
+                    BackgroundColor3 = "MainColor",
+                    BackgroundTransparency = 0,
                     Position = UDim2.fromOffset(0, 35),
                     Size = UDim2.new(1, 0, 1, -35),
                     Parent = GroupboxHolder,
