@@ -8955,18 +8955,18 @@ function Library:CreateWindow(WindowInfo)
             })
         end
 
-        local X = Library:GetTextBounds(
-            WindowInfo.Title,
-            Library.Scheme.Font,
-            20,
-            TitleHolder.AbsoluteSize.X - (WindowInfo.Icon and WindowInfo.IconSize.X.Offset + 6 or 0) - 12
-        )
         WindowTitle = New("TextLabel", {
+            AnchorPoint = Vector2.new(0.5, 0.5),
             BackgroundTransparency = 1,
-            Size = UDim2.new(0, X, 1, 0),
+            Position = UDim2.fromScale(0.5, 0.5),
+            Size = UDim2.new(0.4, 0, 1, 0),
             Text = WindowInfo.Title,
             TextSize = 20,
-            Parent = TitleHolder,
+            TextTruncate = Enum.TextTruncate.AtEnd,
+            TextXAlignment = Enum.TextXAlignment.Center,
+            TextYAlignment = Enum.TextYAlignment.Center,
+            ZIndex = 3,
+            Parent = TopBar,
         })
 
         --// Top Right Bar \\--
@@ -9476,7 +9476,7 @@ function Library:CreateWindow(WindowInfo)
             IsCompact = Window:GetSidebarWidth() <= WindowInfo.CompactWidthActivation
         end
 
-        WindowTitle.Visible = not IsCompact
+        WindowTitle.Visible = true
         if not WindowInfo.Icon then
             WindowIcon.Visible = IsCompact
         end

@@ -10,7 +10,7 @@ Library.ForceCheckbox = false -- Forces AddToggle to AddCheckbox
 Library.ShowToggleFrameInKeybinds = true -- Make toggle keybinds work inside the keybinds UI (aka adds a toggle to the UI). Good for mobile users (Default value = true)
 
 local Window = Library:CreateWindow({
-	Title = "",
+	Title = "TEST",
 	Footer = "",
 	NotifySide = "Right",
 	MobileButtonsSide = "Left",
