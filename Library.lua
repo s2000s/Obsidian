@@ -8945,11 +8945,14 @@ function Library:CreateWindow(WindowInfo)
                 Parent = TitleHolder,
             })
         else
-            WindowIcon = New("TextLabel", {
+            local DefaultIcon = Library:GetIcon("layout-dashboard")
+            WindowIcon = New("ImageLabel", {
                 BackgroundTransparency = 1,
+                Image = DefaultIcon and DefaultIcon.Url or "",
+                ImageColor3 = "FontColor",
+                ImageRectOffset = DefaultIcon and DefaultIcon.ImageRectOffset or Vector2.zero,
+                ImageRectSize = DefaultIcon and DefaultIcon.ImageRectSize or Vector2.zero,
                 Size = WindowInfo.IconSize,
-                Text = WindowInfo.Title:sub(1, 1),
-                TextScaled = true,
                 Visible = false,
                 Parent = TitleHolder,
             })
