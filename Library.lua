@@ -8812,6 +8812,8 @@ function Library:CreateWindow(WindowInfo)
     local RightWrapper
     local SearchBox
     local SearchBoxStroke
+    local SearchBoxPadding
+    local SearchIconImage
     local SearchBoxExpanded = true
     local SearchBoxTween
     local SetSearchBoxExpanded
@@ -8964,7 +8966,7 @@ function Library:CreateWindow(WindowInfo)
         RightWrapper = New("Frame", {
             AnchorPoint = Vector2.new(1, 0.5),
             BackgroundTransparency = 1,
-            Position = UDim2.new(1, -WindowControlsRightOffset - 12, 0.5, 0),
+            Position = UDim2.new(1, -WindowControlsRightOffset - 4, 0.5, 0),
             Size = UDim2.new(1, -InitialLeftWidth - WindowControlsRightOffset - 20, 1, -16),
             Parent = TopBar,
         })
@@ -9045,7 +9047,7 @@ function Library:CreateWindow(WindowInfo)
                 Parent = SearchBox,
             })
         )
-        New("UIPadding", {
+        SearchBoxPadding = New("UIPadding", {
             PaddingBottom = UDim.new(0, 8),
             PaddingLeft = UDim.new(0, 8),
             PaddingRight = UDim.new(0, 8),
@@ -9059,14 +9061,15 @@ function Library:CreateWindow(WindowInfo)
 
         local SearchIcon = Library:GetIcon("search")
         if SearchIcon then
-            New("ImageLabel", {
+            SearchIconImage = New("ImageLabel", {
+                AnchorPoint = Vector2.new(0.5, 0.5),
                 Image = SearchIcon.Url,
                 ImageColor3 = "FontColor",
                 ImageRectOffset = SearchIcon.ImageRectOffset,
                 ImageRectSize = SearchIcon.ImageRectSize,
                 ImageTransparency = 0.5,
-                Size = UDim2.fromScale(1, 1),
-                SizeConstraint = Enum.SizeConstraint.RelativeYY,
+                Position = UDim2.fromScale(0.5, 0.5),
+                Size = UDim2.fromOffset(16, 16),
                 Parent = SearchBox,
             })
         end
@@ -9084,13 +9087,21 @@ function Library:CreateWindow(WindowInfo)
             SearchBox.PlaceholderText = Expanded and "Search" or ""
             SearchBox.BackgroundTransparency = Expanded and 0 or 1
             SearchBoxStroke.Transparency = Expanded and 0 or 1
+            SearchBoxPadding.PaddingLeft = UDim.new(0, Expanded and 32 or 0)
+            SearchBoxPadding.PaddingRight = UDim.new(0, Expanded and 8 or 0)
+
+            if SearchIconImage then
+                SearchIconImage.Position = Expanded
+                    and UDim2.new(0, 16, 0.5, 0)
+                    or UDim2.fromScale(0.5, 0.5)
+            end
 
             local TargetSize
             if Expanded then
                 TargetSize = IsDefaultSearchbarSize and (CurrentTabInfo.Visible and UDim2.fromScale(0.5, 1) or UDim2.fromScale(1, 1))
                     or WindowInfo.SearchbarSize
             else
-                TargetSize = UDim2.new(0, 32, 1, 0)
+                TargetSize = UDim2.new(0, 28, 1, 0)
             end
 
             if SearchBoxTween then
@@ -9511,7 +9522,7 @@ function Library:CreateWindow(WindowInfo)
     function Window:SetSidebarWidth(Width)
         Width = math.clamp(Width, 48, MainFrame.Size.X.Offset - WindowInfo.MinContainerWidth - 1)
 
-        DividerLine.Position = UDim2.fromOffset(Width, 0)
+        DividerLine.Position = UDim2.fromOffset(Width, 49)
 
         TitleHolder.Size = UDim2.new(0, Width, 1, 0)
         RightWrapper.Size = UDim2.new(1, -Width - WindowControlsRightOffset - 20, 1, -16)
