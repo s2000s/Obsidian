@@ -9224,6 +9224,14 @@ function Library:CreateWindow(WindowInfo)
             Parent = MainFrame,
         })
         New("UIListLayout", {
+            Padding = UDim.new(0, 4),
+            Parent = Tabs,
+        })
+        New("UIPadding", {
+            PaddingBottom = UDim.new(0, 8),
+            PaddingLeft = UDim.new(0, 6),
+            PaddingRight = UDim.new(0, 6),
+            PaddingTop = UDim.new(0, 8),
             Parent = Tabs,
         })
 
@@ -9426,11 +9434,14 @@ function Library:CreateWindow(WindowInfo)
             end
 
             Button.Label.Visible = not IsCompact
-            Button.Padding.PaddingBottom = UDim.new(0, IsCompact and 6 or 11)
-            Button.Padding.PaddingLeft = UDim.new(0, IsCompact and 6 or 12)
-            Button.Padding.PaddingRight = UDim.new(0, IsCompact and 6 or 12)
-            Button.Padding.PaddingTop = UDim.new(0, IsCompact and 6 or 11)
-            Button.Icon.SizeConstraint = IsCompact and Enum.SizeConstraint.RelativeXY or Enum.SizeConstraint.RelativeYY
+            Button.Padding.PaddingBottom = UDim.new(0, IsCompact and 8 or 14)
+            Button.Padding.PaddingLeft = UDim.new(0, IsCompact and 8 or 14)
+            Button.Padding.PaddingRight = UDim.new(0, IsCompact and 8 or 14)
+            Button.Padding.PaddingTop = UDim.new(0, IsCompact and 8 or 14)
+            Button.Icon.AnchorPoint = Vector2.new(0, 0.5)
+            Button.Icon.Position = IsCompact and UDim2.new(0.5, -11, 0.5, 0) or UDim2.new(0, 14, 0.5, 0)
+            Button.Icon.Size = UDim2.fromOffset(IsCompact and 22 or 16, IsCompact and 22 or 16)
+            Button.Icon.SizeConstraint = Enum.SizeConstraint.RelativeXY
         end
     end
 
@@ -9565,23 +9576,30 @@ function Library:CreateWindow(WindowInfo)
             TabButton = New("TextButton", {
                 BackgroundColor3 = "MainColor",
                 BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, 40),
+                Size = UDim2.new(1, 0, 0, 48),
                 Text = "",
                 LayoutOrder = Order,
                 Parent = Tabs,
             })
+            table.insert(
+                Library.Corners,
+                New("UICorner", {
+                    CornerRadius = UDim.new(0, math.max(WindowInfo.CornerRadius, 6)),
+                    Parent = TabButton,
+                })
+            )
             local ButtonPadding = New("UIPadding", {
-                PaddingBottom = UDim.new(0, IsCompact and 6 or 11),
-                PaddingLeft = UDim.new(0, IsCompact and 6 or 12),
-                PaddingRight = UDim.new(0, IsCompact and 6 or 12),
-                PaddingTop = UDim.new(0, IsCompact and 6 or 11),
+                PaddingBottom = UDim.new(0, IsCompact and 8 or 14),
+                PaddingLeft = UDim.new(0, IsCompact and 8 or 14),
+                PaddingRight = UDim.new(0, IsCompact and 8 or 14),
+                PaddingTop = UDim.new(0, IsCompact and 8 or 14),
                 Parent = TabButton,
             })
 
             TabLabel = New("TextLabel", {
                 BackgroundTransparency = 1,
-                Position = UDim2.fromOffset(30, 0),
-                Size = UDim2.new(1, -30, 1, 0),
+                Position = UDim2.fromOffset(36, 0),
+                Size = UDim2.new(1, -36, 1, 0),
                 Text = Name,
                 TextSize = 16,
                 TextTransparency = 0.5,
@@ -9597,9 +9615,11 @@ function Library:CreateWindow(WindowInfo)
                     ImageRectOffset = Icon.ImageRectOffset,
                     ImageRectSize = Icon.ImageRectSize,
                     ImageTransparency = 0.5,
+                    AnchorPoint = Vector2.new(0, 0.5),
+                    Position = IsCompact and UDim2.new(0.5, -11, 0.5, 0) or UDim2.new(0, 14, 0.5, 0),
                     ScaleType = Enum.ScaleType.Fit,
-                    Size = UDim2.fromScale(1, 1),
-                    SizeConstraint = IsCompact and Enum.SizeConstraint.RelativeXY or Enum.SizeConstraint.RelativeYY,
+                    Size = UDim2.fromOffset(IsCompact and 22 or 16, IsCompact and 22 or 16),
+                    SizeConstraint = Enum.SizeConstraint.RelativeXY,
                     Parent = TabButton,
                 })
             end
@@ -10702,22 +10722,29 @@ function Library:CreateWindow(WindowInfo)
             TabButton = New("TextButton", {
                 BackgroundColor3 = "MainColor",
                 BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, 40),
+                Size = UDim2.new(1, 0, 0, 48),
                 Text = "",
                 Parent = Tabs,
             })
+            table.insert(
+                Library.Corners,
+                New("UICorner", {
+                    CornerRadius = UDim.new(0, math.max(WindowInfo.CornerRadius, 6)),
+                    Parent = TabButton,
+                })
+            )
             local ButtonPadding = New("UIPadding", {
-                PaddingBottom = UDim.new(0, IsCompact and 6 or 11),
-                PaddingLeft = UDim.new(0, IsCompact and 6 or 12),
-                PaddingRight = UDim.new(0, IsCompact and 6 or 12),
-                PaddingTop = UDim.new(0, IsCompact and 6 or 11),
+                PaddingBottom = UDim.new(0, IsCompact and 8 or 14),
+                PaddingLeft = UDim.new(0, IsCompact and 8 or 14),
+                PaddingRight = UDim.new(0, IsCompact and 8 or 14),
+                PaddingTop = UDim.new(0, IsCompact and 8 or 14),
                 Parent = TabButton,
             })
 
             TabLabel = New("TextLabel", {
                 BackgroundTransparency = 1,
-                Position = UDim2.fromOffset(30, 0),
-                Size = UDim2.new(1, -30, 1, 0),
+                Position = UDim2.fromOffset(36, 0),
+                Size = UDim2.new(1, -36, 1, 0),
                 Text = Name,
                 TextSize = 16,
                 TextTransparency = 0.5,
@@ -10733,8 +10760,10 @@ function Library:CreateWindow(WindowInfo)
                     ImageRectOffset = Icon.ImageRectOffset,
                     ImageRectSize = Icon.ImageRectSize,
                     ImageTransparency = 0.5,
-                    Size = UDim2.fromScale(1, 1),
-                    SizeConstraint = IsCompact and Enum.SizeConstraint.RelativeXY or Enum.SizeConstraint.RelativeYY,
+                    AnchorPoint = Vector2.new(0, 0.5),
+                    Position = IsCompact and UDim2.new(0.5, -11, 0.5, 0) or UDim2.new(0, 14, 0.5, 0),
+                    Size = UDim2.fromOffset(IsCompact and 22 or 16, IsCompact and 22 or 16),
+                    SizeConstraint = Enum.SizeConstraint.RelativeXY,
                     Parent = TabButton,
                 })
             end
