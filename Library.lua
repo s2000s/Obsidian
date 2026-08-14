@@ -4783,7 +4783,7 @@ do
 
         local Holder = New("Frame", {
             BackgroundTransparency = 1,
-            Size = UDim2.new(1, 0, 0, 21),
+            Size = UDim2.new(1, 0, 0, 24),
             Parent = Container,
         })
 
@@ -6344,7 +6344,7 @@ do
 
         local Label = New("TextLabel", {
             BackgroundTransparency = 1,
-            Size = UDim2.new(0.5, -8, 0, 21),
+            Size = UDim2.new(0.5, -8, 0, 24),
             Text = Dropdown.Text,
             TextSize = 14,
             TextXAlignment = Enum.TextXAlignment.Left,
@@ -6358,7 +6358,7 @@ do
             AnchorPoint = Vector2.new(1, 0.5),
             BackgroundColor3 = "ElementColor",
             Position = UDim2.new(1, 0, 0.5, 0),
-            Size = UDim2.new(0.45, 0, 0, 21),
+            Size = UDim2.new(0.4, 0, 0, 24),
             Text = "",
             TextTransparency = 1,
             ZIndex = 2,
@@ -6386,7 +6386,7 @@ do
 
         local DisplayImage = New("ImageLabel", {
             BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(-4, 3),
+            Position = UDim2.fromOffset(-4, 4),
             Size = UDim2.fromOffset(16, 16),
             Image = "",
             ImageTransparency = 1,
@@ -6397,7 +6397,7 @@ do
         local DisplayButton = New("TextButton", {
             Active = not Dropdown.Disabled,
             BackgroundTransparency = 1,
-            Size = UDim2.new(1, 0, 0, 21),
+            Size = UDim2.new(1, 0, 0, 24),
             Text = "---",
             TextTruncate = Enum.TextTruncate.AtEnd,
             TextSize = 14,
@@ -6426,18 +6426,18 @@ do
         local function UpdateDropdownLayout()
             local HasTitle = typeof(Dropdown.Text) == "string" and Dropdown.Text ~= ""
 
-            Holder.Size = UDim2.new(1, 0, 0, 21)
+            Holder.Size = UDim2.new(1, 0, 0, 24)
             Label.Visible = HasTitle
-            Label.Size = UDim2.new(HasTitle and 0.5 or 1, HasTitle and -8 or 0, 0, 21)
+            Label.Size = UDim2.new(HasTitle and 0.5 or 1, HasTitle and -8 or 0, 0, 24)
 
             if HasTitle then
                 DisplayContainer.AnchorPoint = Vector2.new(1, 0.5)
                 DisplayContainer.Position = UDim2.new(1, 0, 0.5, 0)
-                DisplayContainer.Size = UDim2.new(0.45, 0, 0, 21)
+                DisplayContainer.Size = UDim2.new(0.4, 0, 0, 24)
             else
                 DisplayContainer.AnchorPoint = Vector2.new(0, 1)
                 DisplayContainer.Position = UDim2.fromScale(0, 1)
-                DisplayContainer.Size = UDim2.new(1, 0, 0, 21)
+                DisplayContainer.Size = UDim2.new(1, 0, 0, 24)
             end
         end
 
@@ -6605,7 +6605,7 @@ do
                 DisplayImage.ImageTransparency = 1
             end
 
-            DisplayButton.Size = ValueImage and UDim2.new(1, -8, 0, 21) or UDim2.new(1, 0, 0, 21)
+            DisplayButton.Size = ValueImage and UDim2.new(1, -8, 0, 24) or UDim2.new(1, 0, 0, 24)
             DisplayButton.Position = ValueImage and UDim2.fromOffset(14, 0) or UDim2.fromOffset(0, 0)
         end
 
