@@ -6399,10 +6399,16 @@ do
             BackgroundTransparency = 1,
             Size = UDim2.new(1, 0, 0, 21),
             Text = "---",
+            TextTruncate = Enum.TextTruncate.AtEnd,
             TextSize = 14,
             TextXAlignment = Enum.TextXAlignment.Left,
             ZIndex = 2,
             Parent = DisplayContainer,
+        })
+
+        New("UIPadding", {
+            PaddingRight = UDim.new(0, 20),
+            Parent = DisplayButton,
         })
 
         local ArrowImage = New("ImageLabel", {
