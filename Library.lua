@@ -6545,7 +6545,7 @@ do
 
             local MultiDropdownCorner = MenuTable.Menu:FindFirstChildOfClass("UICorner")
             if MultiDropdownCorner then
-                MultiDropdownCorner.CornerRadius = UDim.new(0, 7)
+                MultiDropdownCorner.CornerRadius = UDim.new(0, 13)
             end
 
             MultiDropdownListTop = 114
