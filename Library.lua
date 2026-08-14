@@ -9,6 +9,7 @@ local UserInputService: UserInputService = cloneref(game:GetService("UserInputSe
 local TextService: TextService = cloneref(game:GetService("TextService"))
 local Teams: Teams = cloneref(game:GetService("Teams"))
 local TweenService: TweenService = cloneref(game:GetService("TweenService"))
+local WorkSansFont = Font.fromId(12187373327, Enum.FontWeight.Regular, Enum.FontStyle.Normal)
 
 local getgenv = getgenv or function()
     return shared
@@ -270,7 +271,7 @@ local Library = {
         AccentColor = Color3.fromRGB(231, 184, 119),
         OutlineColor = Color3.fromRGB(36, 39, 44),
         FontColor = Color3.fromRGB(242, 244, 247),
-        Font = Font.fromEnum(Enum.Font.Code),
+        Font = WorkSansFont,
 
         RedColor = Color3.fromRGB(255, 50, 50),
         DestructiveColor = Color3.fromRGB(220, 38, 38),
@@ -376,7 +377,7 @@ local Templates = {
         NotifySide = "Right",
         ShowCustomCursor = true,
 
-        Font = Enum.Font.Code,
+        Font = WorkSansFont,
         ToggleKeybind = Enum.KeyCode.RightControl,
 
         ShowMobileButtons = true,

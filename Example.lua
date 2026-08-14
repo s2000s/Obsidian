@@ -13,13 +13,13 @@ local Window = Library:CreateWindow({
 	Title = "",
 	Footer = "",
 	NotifySide = "Right",
+	MobileButtonsSide = "Left",
 	ShowCustomCursor = false,
-    MobileButtonsSide = "Left",
     SidebarCompacted = true,
-    CornerRadius = 5,
 	CollapsibleSearch = true,
 	GlobalSearch = true,
 	Resizable = false,
+	CornerRadius = 5,
 })
 
 Window:SetAnimations({ ToggleWindow = true, TabSwitch = true, Groupbox = true, Dropdown = true, KeyPicker = true }, 0.22, 26, "bottom")
@@ -680,20 +680,6 @@ Library:AddDraggableLabel("This is a Draggable Label")
 -- UI Settings
 local MenuGroup = Tabs["UI Settings"]:AddLeftGroupbox("Menu", "wrench")
 
-MenuGroup:AddToggle("KeybindMenuOpen", {
-	Default = Library.KeybindFrame.Visible,
-	Text = "Open Keybind Menu",
-	Callback = function(value)
-		Library.KeybindFrame.Visible = value
-	end,
-})
-MenuGroup:AddToggle("ShowCustomCursor", {
-	Text = "Custom Cursor",
-	Default = Library.ShowCustomCursor,
-	Callback = function(Value)
-		Library.ShowCustomCursor = Value
-	end,
-})
 MenuGroup:AddDropdown("NotificationSide", {
 	Values = { "Left", "Right" },
 	Default = "Right",
@@ -730,12 +716,7 @@ MenuGroup:AddSlider("UICornerSlider", {
 })
 
 MenuGroup:AddDivider()
-MenuGroup:AddLabel("Menu bind")
-	:AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
-
-MenuGroup:AddButton("Unload", function()
-	Library:Unload()
-end)
+MenuGroup:AddLabel("Menu Keybind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
 
 Library.ToggleKeybind = Options.MenuKeybind -- Allows you to have a custom keybind for the menu
 

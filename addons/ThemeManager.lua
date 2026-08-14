@@ -57,6 +57,28 @@ local function EnsureElementColors(ThemeData)
     ThemeData.ElementHoverColor = ThemeData.ElementHoverColor or OffsetColor(MainColor, 8):ToHex()
     ThemeData.ElementDisabledColor = ThemeData.ElementDisabledColor or BackgroundColor:ToHex()
 end
+
+local WorkSansFont = Font.fromId(12187373327, Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+
+local function ResolveFontFace(FontFace)
+    if typeof(FontFace) == "EnumItem" then
+        return Font.fromEnum(FontFace)
+    end
+
+    if typeof(FontFace) == "string" then
+        if FontFace == "WorkSans" then
+            return WorkSansFont
+        end
+
+        local FontEnum = Enum.Font[FontFace]
+        if FontEnum then
+            return Font.fromEnum(FontEnum)
+        end
+    end
+
+    return nil
+end
+
 local ThemeManager = {
     Library = nil,
 
@@ -69,6 +91,7 @@ local ThemeManager = {
         ["Default"] = {
             1,
             {
+                FontFace = "WorkSans",
                 FontColor = "f2f4f7",
                 MainColor = "16181b",
                 ElementColor = "26292e",
@@ -426,20 +449,14 @@ function ThemeManager:SetDefaultTheme(Theme: any)
     end
 
     --// Font
-    local FontFace = Theme["FontFace"]
-    local FontFaceType = typeof(FontFace)
-    
-    if FontFaceType == "EnumItem" then
-        LibraryScheme.Font = Font.fromEnum(FontFace)
-        FinalTheme.FontFace = FontFace.Name
-
-    elseif FontFaceType == "string" then
-        LibraryScheme.Font = Font.fromEnum(Enum.Font[FontFace] :: Enum.Font)
-        FinalTheme.FontFace = FontFace
-    
+    local FontFace = Theme["FontFace"] or "WorkSans"
+    local ResolvedFont = ResolveFontFace(FontFace)
+    if ResolvedFont then
+        LibraryScheme.Font = ResolvedFont
+        FinalTheme.FontFace = typeof(FontFace) == "EnumItem" and FontFace.Name or FontFace
     else
-        LibraryScheme.Font = Font.fromEnum(Enum.Font.Code)
-        FinalTheme.FontFace = "Code"
+        LibraryScheme.Font = WorkSansFont
+        FinalTheme.FontFace = "WorkSans"
     end
 
     --// Default Scheme Colors
@@ -564,7 +581,10 @@ function ThemeManager:ApplyTheme(ThemeName: string)
         local FinalValue = Value
 
         if Index == "FontFace" then
-            ThemeManager.Library:SetFont(Enum.Font[FinalValue])
+            local ResolvedFont = ResolveFontFace(FinalValue)
+            if ResolvedFont then
+                ThemeManager.Library:SetFont(ResolvedFont)
+            end
 
         elseif Index == "BackgroundImage" then
             ThemeManager.Library:SetBackgroundImage(FinalValue)
@@ -672,9 +692,9 @@ function ThemeManager:CreateThemeManager(Themesbox: any)
     
     Themesbox:AddDropdown("FontFace", {
         Text = "Font Face",
-        Default = "Code",
+        Default = "WorkSans",
         
-        Values = { "BuilderSans", "Code", "Fantasy", "Gotham", "Jura", "Roboto", "RobotoMono", "SourceSans" },
+        Values = { "WorkSans", "BuilderSans", "Code", "Fantasy", "Gotham", "Jura", "Roboto", "RobotoMono", "SourceSans" },
         AllowNull = false,
         Multi = false
     })
@@ -917,7 +937,12 @@ function ThemeManager:CreateThemeManager(Themesbox: any)
     ElementColor:OnChanged(UpdateTheme)
     ElementHoverColor:OnChanged(UpdateTheme)
     ElementDisabledColor:OnChanged(UpdateTheme)
-    FontFace:OnChanged(function(Value) ThemeManager.Library:SetFont(Enum.Font[Value]) end)
+    FontFace:OnChanged(function(Value)
+        local ResolvedFont = ResolveFontFace(Value)
+        if ResolvedFont then
+            ThemeManager.Library:SetFont(ResolvedFont)
+        end
+    end)
     BackgroundImage:OnChanged(function(Value) ThemeManager.Library:SetBackgroundImage(Value) end)
 
     --// Load default
