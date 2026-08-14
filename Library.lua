@@ -9098,13 +9098,13 @@ function Library:CreateWindow(WindowInfo)
             SearchBoxExpanded = Expanded
             SearchBox.BackgroundTransparency = Expanded and 0 or 1
             SearchBoxStroke.Transparency = Expanded and 0 or 1
-            SearchBoxPadding.PaddingLeft = UDim.new(0, Expanded and 32 or 0)
+            SearchBoxPadding.PaddingLeft = UDim.new(0, Expanded and 24 or 0)
             SearchBoxPadding.PaddingRight = UDim.new(0, Expanded and 8 or 0)
             SearchButton.Visible = not Expanded
 
             if SearchIconImage then
                 SearchIconImage.Position = Expanded
-                    and UDim2.new(0, -28, 0.5, 0)
+                    and UDim2.new(0, -20, 0.5, 0)
                     or UDim2.new(0, 6, 0.5, 0)
             end
 
