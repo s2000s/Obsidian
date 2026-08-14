@@ -9097,13 +9097,20 @@ function Library:CreateWindow(WindowInfo)
         local function CreateWindowControl(Icon)
             local Button = New("ImageButton", {
                 BackgroundTransparency = 1,
+                Size = UDim2.fromOffset(28, 28),
+                Parent = WindowControls,
+            })
+            local IconImage = New("ImageLabel", {
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BackgroundTransparency = 1,
                 Image = Icon and Icon.Url or "",
                 ImageColor3 = "FontColor",
                 ImageRectOffset = Icon and Icon.ImageRectOffset or Vector2.zero,
                 ImageRectSize = Icon and Icon.ImageRectSize or Vector2.zero,
                 ImageTransparency = 0.35,
-                Size = UDim2.fromOffset(28, 28),
-                Parent = WindowControls,
+                Position = UDim2.fromScale(0.5, 0.5),
+                Size = UDim2.fromOffset(16, 16),
+                Parent = Button,
             })
             New("UICorner", {
                 CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
@@ -9113,19 +9120,18 @@ function Library:CreateWindow(WindowInfo)
             Library:GiveSignal(Button.MouseEnter:Connect(function()
                 Button.BackgroundColor3 = Library.Scheme.ElementColor
                 Button.BackgroundTransparency = 0
-                Button.ImageTransparency = 0
+                IconImage.ImageTransparency = 0
             end))
             Library:GiveSignal(Button.MouseLeave:Connect(function()
                 Button.BackgroundTransparency = 1
-                Button.ImageTransparency = 0.35
+                IconImage.ImageTransparency = 0.35
             end))
 
-            return Button
+            return Button, IconImage
         end
 
         MinimizeButton = CreateWindowControl(MinimizeIcon)
-        MaximizeButton = CreateWindowControl(MaximizeIcon)
-        MaximizeButtonIcon = MaximizeButton
+        MaximizeButton, MaximizeButtonIcon = CreateWindowControl(MaximizeIcon)
         CloseButton = CreateWindowControl(CloseIcon)
 
         -- if MoveIcon then
