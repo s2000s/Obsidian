@@ -2870,7 +2870,7 @@ local CheckIcon = Library:GetIcon("check")
 local ArrowIcon = Library:GetIcon("chevron-up")
 local ResizeIcon = Library:GetIcon("move-diagonal-2")
 local KeyIcon = Library:GetIcon("key")
-local MoveIcon = Library:GetIcon("move")
+-- local MoveIcon = Library:GetIcon("move")
 
 function Library:SetIconModule(module: IconModule)
     FetchIcons = true
@@ -2881,7 +2881,7 @@ function Library:SetIconModule(module: IconModule)
     ArrowIcon = Library:GetIcon("chevron-up")
     ResizeIcon = Library:GetIcon("move-diagonal-2")
     KeyIcon = Library:GetIcon("key")
-    MoveIcon = Library:GetIcon("move")
+    -- MoveIcon = Library:GetIcon("move")
 end
 
 local BaseAddons = {}
