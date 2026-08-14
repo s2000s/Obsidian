@@ -2870,6 +2870,10 @@ local CheckIcon = Library:GetIcon("check")
 local ArrowIcon = Library:GetIcon("chevron-up")
 local ResizeIcon = Library:GetIcon("move-diagonal-2")
 local KeyIcon = Library:GetIcon("key")
+local MinimizeIcon = Library:GetIcon("minus")
+local MaximizeIcon = Library:GetIcon("maximize-2")
+local RestoreIcon = Library:GetIcon("minimize-2")
+local CloseIcon = Library:GetIcon("x")
 -- local MoveIcon = Library:GetIcon("move")
 
 function Library:SetIconModule(module: IconModule)
@@ -2881,6 +2885,10 @@ function Library:SetIconModule(module: IconModule)
     ArrowIcon = Library:GetIcon("chevron-up")
     ResizeIcon = Library:GetIcon("move-diagonal-2")
     KeyIcon = Library:GetIcon("key")
+    MinimizeIcon = Library:GetIcon("minus")
+    MaximizeIcon = Library:GetIcon("maximize-2")
+    RestoreIcon = Library:GetIcon("minimize-2")
+    CloseIcon = Library:GetIcon("x")
     -- MoveIcon = Library:GetIcon("move")
 end
 
@@ -8757,6 +8765,16 @@ function Library:CreateWindow(WindowInfo)
     local CurrentTabLabel
     local CurrentTabDescription
     local ResizeButton
+    local WindowControls
+    local MinimizeButton
+    local MaximizeButton
+    local CloseButton
+    local MaximizeButtonIcon
+    local IsMaximized = false
+    local RestorePosition
+    local RestoreSize
+    local RestoreAnchorPoint
+    local RestoreSidebarWidth
     local Tabs
     local Container
     local BackgroundImage
@@ -8767,6 +8785,8 @@ function Library:CreateWindow(WindowInfo)
     local InitialLeftWidth = math.ceil(WindowInfo.Size.X.Offset * 0.3)
     local IsCompact = WindowInfo.SidebarCompacted
     local LastExpandedWidth = InitialLeftWidth
+    local WindowControlsWidth = 100
+    local WindowControlsRightOffset = WindowControlsWidth + 8
 
     do
         Library.KeybindFrame, Library.KeybindContainer = Library:AddDraggableMenu("Keybinds")
@@ -8899,8 +8919,8 @@ function Library:CreateWindow(WindowInfo)
         RightWrapper = New("Frame", {
             AnchorPoint = Vector2.new(1, 0.5),
             BackgroundTransparency = 1,
-            Position = UDim2.new(1, -49, 0.5, 0),
-            Size = UDim2.new(1, -InitialLeftWidth - 57 - 1, 1, -16),
+            Position = UDim2.new(1, -WindowControlsRightOffset - 12, 0.5, 0),
+            Size = UDim2.new(1, -InitialLeftWidth - WindowControlsRightOffset - 20, 1, -16),
             Parent = TopBar,
         })
 
@@ -9057,6 +9077,56 @@ function Library:CreateWindow(WindowInfo)
                 end
             end))
         end
+
+        --// Window Controls \--
+        WindowControls = New("Frame", {
+            AnchorPoint = Vector2.new(1, 0.5),
+            BackgroundTransparency = 1,
+            Position = UDim2.new(1, -8, 0.5, 0),
+            Size = UDim2.fromOffset(WindowControlsWidth, 32),
+            Parent = TopBar,
+        })
+        New("UIListLayout", {
+            FillDirection = Enum.FillDirection.Horizontal,
+            HorizontalAlignment = Enum.HorizontalAlignment.Right,
+            VerticalAlignment = Enum.VerticalAlignment.Center,
+            Padding = UDim.new(0, 4),
+            Parent = WindowControls,
+        })
+
+        local function CreateWindowControl(Icon)
+            local Button = New("ImageButton", {
+                BackgroundTransparency = 1,
+                Image = Icon and Icon.Url or "",
+                ImageColor3 = "FontColor",
+                ImageRectOffset = Icon and Icon.ImageRectOffset or Vector2.zero,
+                ImageRectSize = Icon and Icon.ImageRectSize or Vector2.zero,
+                ImageTransparency = 0.35,
+                Size = UDim2.fromOffset(28, 28),
+                Parent = WindowControls,
+            })
+            New("UICorner", {
+                CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
+                Parent = Button,
+            })
+
+            Library:GiveSignal(Button.MouseEnter:Connect(function()
+                Button.BackgroundColor3 = Library.Scheme.ElementColor
+                Button.BackgroundTransparency = 0
+                Button.ImageTransparency = 0
+            end))
+            Library:GiveSignal(Button.MouseLeave:Connect(function()
+                Button.BackgroundTransparency = 1
+                Button.ImageTransparency = 0.35
+            end))
+
+            return Button
+        end
+
+        MinimizeButton = CreateWindowControl(MinimizeIcon)
+        MaximizeButton = CreateWindowControl(MaximizeIcon)
+        MaximizeButtonIcon = MaximizeButton
+        CloseButton = CreateWindowControl(CloseIcon)
 
         -- if MoveIcon then
         --     New("ImageLabel", {
@@ -9364,12 +9434,22 @@ function Library:CreateWindow(WindowInfo)
         end
     end
 
+    local function UpdateWindowControlIcons()
+        local WindowIcon = IsMaximized and RestoreIcon or MaximizeIcon
+        if MaximizeButtonIcon and WindowIcon then
+            MaximizeButtonIcon.Image = WindowIcon.Url
+            MaximizeButtonIcon.ImageRectOffset = WindowIcon.ImageRectOffset
+            MaximizeButtonIcon.ImageRectSize = WindowIcon.ImageRectSize
+        end
+    end
+
     function Window:IsSidebarCompacted()
         return IsCompact
     end
 
     function Window:SetCompact(State)
         Window:SetSidebarWidth(State and WindowInfo.SidebarCompactWidth or LastExpandedWidth)
+        UpdateWindowControlIcons()
     end
 
     function Window:GetSidebarWidth()
@@ -9382,7 +9462,7 @@ function Library:CreateWindow(WindowInfo)
         DividerLine.Position = UDim2.fromOffset(Width, 0)
 
         TitleHolder.Size = UDim2.new(0, Width, 1, 0)
-        RightWrapper.Size = UDim2.new(1, -Width - 57 - 1, 1, -16)
+        RightWrapper.Size = UDim2.new(1, -Width - WindowControlsRightOffset - 20, 1, -16)
         Tabs.Size = UDim2.new(0, Width, 1, -70)
         Container.Size = UDim2.new(1, -Width - 1, 1, -70)
 
@@ -9392,6 +9472,47 @@ function Library:CreateWindow(WindowInfo)
         if not IsCompact then
             LastExpandedWidth = Width
         end
+    end
+
+    function Window:IsMaximized()
+        return IsMaximized
+    end
+
+    function Window:SetMaximized(State: boolean?)
+        if State == nil then
+            State = not IsMaximized
+        end
+
+        if State == IsMaximized then
+            return
+        end
+
+        if State then
+            RestorePosition = MainFrame.Position
+            RestoreSize = MainFrame.Size
+            RestoreAnchorPoint = MainFrame.AnchorPoint
+            RestoreSidebarWidth = Window:GetSidebarWidth()
+
+            IsMaximized = true
+            MainFrame.AnchorPoint = Vector2.zero
+            MainFrame.Position = UDim2.fromOffset(0, 0)
+
+            local CurrentViewport = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or ViewportSize
+            MainFrame.Size = UDim2.fromOffset(CurrentViewport.X, CurrentViewport.Y)
+            Window:SetSidebarWidth(RestoreSidebarWidth)
+        else
+            IsMaximized = false
+            MainFrame.AnchorPoint = RestoreAnchorPoint or Vector2.zero
+            MainFrame.Position = RestorePosition or WindowInfo.Position
+            MainFrame.Size = RestoreSize or WindowInfo.Size
+            Window:SetSidebarWidth(RestoreSidebarWidth or InitialLeftWidth)
+        end
+
+        if ResizeButton then
+            ResizeButton.Visible = not IsMaximized
+        end
+
+        UpdateWindowControlIcons()
     end
 
     function Window:ShowTabInfo(Name, Description)
@@ -11467,6 +11588,20 @@ function Library:CreateWindow(WindowInfo)
         end
     end
 
+    Library:GiveSignal(MinimizeButton.MouseButton1Click:Connect(function()
+        Library:Toggle()
+    end))
+
+    Library:GiveSignal(MaximizeButton.MouseButton1Click:Connect(function()
+        Window:SetMaximized()
+    end))
+
+    Library:GiveSignal(CloseButton.MouseButton1Click:Connect(function()
+        Library:Unload()
+    end))
+
+    UpdateWindowControlIcons()
+
     function Library:Toggle(Value: boolean?)
         return Window:Toggle(Value)
     end
@@ -11557,7 +11692,7 @@ function Library:CreateWindow(WindowInfo)
         end))
     end
     if WindowInfo.EnableCompacting and WindowInfo.SidebarCompacted then
-        Window:SetSidebarWidth(WindowInfo.SidebarCompactWidth)
+        Window:SetCompact(true)
     end
     if WindowInfo.AutoShow and not Library.ActiveLoading then
         task.spawn(Library.Toggle)
