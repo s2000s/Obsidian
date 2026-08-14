@@ -365,7 +365,7 @@ local Templates = {
         Center = true,
         Resizable = true,
 
-        SearchbarSize = UDim2.fromScale(1, 1),
+        SearchbarSize = UDim2.fromScale(0.4, 1),
         CollapsibleSearch = true,
         GlobalSearch = false,
 
@@ -8724,6 +8724,7 @@ function Library:CreateWindow(WindowInfo)
     local WindowIcon
     local RightWrapper
     local SearchBox
+    local SearchBoxStroke
     local SearchBoxExpanded = true
     local SearchBoxTween
     local SetSearchBoxExpanded
@@ -8961,7 +8962,7 @@ function Library:CreateWindow(WindowInfo)
             PaddingTop = UDim.new(0, 8),
             Parent = SearchBox,
         })
-        New("UIStroke", {
+        SearchBoxStroke = New("UIStroke", {
             Color = "OutlineColor",
             Parent = SearchBox,
         })
@@ -8991,6 +8992,8 @@ function Library:CreateWindow(WindowInfo)
 
             SearchBoxExpanded = Expanded
             SearchBox.PlaceholderText = Expanded and "Search" or ""
+            SearchBox.BackgroundTransparency = Expanded and 0 or 1
+            SearchBoxStroke.Transparency = Expanded and 0 or 1
 
             local TargetSize
             if Expanded then
