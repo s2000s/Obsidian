@@ -8944,18 +8944,6 @@ function Library:CreateWindow(WindowInfo)
                 Size = WindowInfo.IconSize,
                 Parent = TitleHolder,
             })
-        else
-            local DefaultIcon = Library:GetIcon("layout-dashboard")
-            WindowIcon = New("ImageLabel", {
-                BackgroundTransparency = 1,
-                Image = DefaultIcon and DefaultIcon.Url or "",
-                ImageColor3 = "FontColor",
-                ImageRectOffset = DefaultIcon and DefaultIcon.ImageRectOffset or Vector2.zero,
-                ImageRectSize = DefaultIcon and DefaultIcon.ImageRectSize or Vector2.zero,
-                Size = WindowInfo.IconSize,
-                Visible = false,
-                Parent = TitleHolder,
-            })
         end
 
         WindowTitle = New("TextLabel", {
@@ -9480,10 +9468,6 @@ function Library:CreateWindow(WindowInfo)
         end
 
         WindowTitle.Visible = true
-        if not WindowInfo.Icon then
-            WindowIcon.Visible = IsCompact
-        end
-
         for _, Button in Library.TabButtons do
             if not Button.Icon then
                 continue
