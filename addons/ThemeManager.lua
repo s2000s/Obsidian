@@ -30,12 +30,32 @@ if isfolder_success == false or typeof(isfolder_error) ~= "boolean" then
 end
 
 --// Theme Manager
-local SchemeIndexes = { "FontColor", "MainColor", "AccentColor", "BackgroundColor", "OutlineColor" }
+local SchemeIndexes = {
+    "FontColor",
+    "MainColor",
+    "AccentColor",
+    "BackgroundColor",
+    "OutlineColor",
+    "ElementColor",
+    "ElementHoverColor",
+    "ElementDisabledColor",
+}
 
-local function UpdateElementColors(Library)
-    Library.Scheme.ElementColor = Library:GetBetterColor(Library.Scheme.MainColor, 2)
-    Library.Scheme.ElementHoverColor = Library:GetBetterColor(Library.Scheme.MainColor, 4)
-    Library.Scheme.ElementDisabledColor = Library:GetBetterColor(Library.Scheme.BackgroundColor, 0)
+local function OffsetColor(Color, Offset)
+    return Color3.fromRGB(
+        math.clamp(Color.R * 255 + Offset, 0, 255),
+        math.clamp(Color.G * 255 + Offset, 0, 255),
+        math.clamp(Color.B * 255 + Offset, 0, 255)
+    )
+end
+
+local function EnsureElementColors(ThemeData)
+    local MainColor = Color3.fromHex(ThemeData.MainColor)
+    local BackgroundColor = Color3.fromHex(ThemeData.BackgroundColor)
+
+    ThemeData.ElementColor = ThemeData.ElementColor or OffsetColor(MainColor, 4):ToHex()
+    ThemeData.ElementHoverColor = ThemeData.ElementHoverColor or OffsetColor(MainColor, 8):ToHex()
+    ThemeData.ElementDisabledColor = ThemeData.ElementDisabledColor or BackgroundColor:ToHex()
 end
 local ThemeManager = {
     Library = nil,
@@ -120,6 +140,10 @@ local ThemeManager = {
         }
     }
 }
+
+for _, ThemeInfo in ThemeManager.BuiltInThemes do
+    EnsureElementColors(ThemeInfo[2])
+end
 
 function ThemeManager:SetLibrary(Library)
     ThemeManager.Library = Library
@@ -414,9 +438,6 @@ function ThemeManager:SetDefaultTheme(Theme: any)
     end
 
     --// Apply
-    LibraryScheme.ElementColor = Library:GetBetterColor(LibraryScheme.MainColor, 2)
-    LibraryScheme.ElementHoverColor = Library:GetBetterColor(LibraryScheme.MainColor, 4)
-    LibraryScheme.ElementDisabledColor = Library:GetBetterColor(LibraryScheme.BackgroundColor, 0)
     Library.Scheme = LibraryScheme
     ThemeManager.BuiltInThemes["Default"] = { 1, FinalTheme }
 
@@ -504,7 +525,6 @@ function ThemeManager:ThemeUpdate()
         Library.Scheme[SchemeIndex] = Element.Value
     end
 
-    UpdateElementColors(Library)
     Library:UpdateColorsUsingRegistry()
 end
 
@@ -523,6 +543,7 @@ function ThemeManager:ApplyTheme(ThemeName: string)
     local Library = ThemeManager.Library
     local SchemeData = Data[2]
     local ThemeData = CustomThemeData or SchemeData
+    EnsureElementColors(ThemeData)
 
     for Index, Value in ThemeData do
         if Index == "VideoLink" then
@@ -635,6 +656,9 @@ function ThemeManager:CreateThemeManager(Themesbox: any)
     local AccentColor = CreateColorOption("Accent color", "AccentColor")
     local OutlineColor = CreateColorOption("Outline color", "OutlineColor")
     local FontColor = CreateColorOption("Font color", "FontColor")
+    local ElementColor = CreateColorOption("Element color", "ElementColor")
+    local ElementHoverColor = CreateColorOption("Element hover color", "ElementHoverColor")
+    local ElementDisabledColor = CreateColorOption("Element disabled color", "ElementDisabledColor")
     
     Themesbox:AddDropdown("FontFace", {
         Text = "Font Face",
@@ -880,6 +904,9 @@ function ThemeManager:CreateThemeManager(Themesbox: any)
     AccentColor:OnChanged(UpdateTheme)
     OutlineColor:OnChanged(UpdateTheme)
     FontColor:OnChanged(UpdateTheme)
+    ElementColor:OnChanged(UpdateTheme)
+    ElementHoverColor:OnChanged(UpdateTheme)
+    ElementDisabledColor:OnChanged(UpdateTheme)
     FontFace:OnChanged(function(Value) ThemeManager.Library:SetFont(Enum.Font[Value]) end)
     BackgroundImage:OnChanged(function(Value) ThemeManager.Library:SetBackgroundImage(Value) end)
 
