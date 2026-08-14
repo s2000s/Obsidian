@@ -6444,7 +6444,7 @@ do
         UpdateDropdownLayout()
 
         local SearchBox
-        if Info.Searchable then
+        if Info.Searchable and not Info.Multi then
             SearchBox = New("TextBox", {
                 BackgroundTransparency = 1,
                 PlaceholderText = "Search...",
@@ -6495,6 +6495,10 @@ do
         local MenuTable = Library:AddContextMenu(
             DisplayContainer,
             function()
+                if Info.Multi then
+                    return UDim2.fromOffset(380, 380)
+                end
+
                 return UDim2.fromOffset((DisplayContainer.AbsoluteSize.X / Library.DPIScale), 0)
             end,
             function()
@@ -6521,20 +6525,178 @@ do
         )
         Dropdown.Menu = MenuTable
 
+        local MultiDropdownListTop = 0
+        local MultiDropdownFooterHeight = 0
+        local MultiDropdownHeight = 380
+        local Pool = {}
+
+        if Info.Multi then
+            MultiDropdownListTop = 114
+            MultiDropdownFooterHeight = 58
+
+            MenuTable.Menu.ClipsDescendants = true
+
+            New("TextLabel", {
+                BackgroundTransparency = 1,
+                Position = UDim2.fromOffset(16, 10),
+                Size = UDim2.new(1, -52, 0, 22),
+                Text = Dropdown.Text or "Select",
+                TextSize = 16,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                Parent = MenuTable.Menu,
+            })
+
+            New("TextLabel", {
+                BackgroundTransparency = 1,
+                Position = UDim2.fromOffset(16, 33),
+                Size = UDim2.new(1, -52, 0, 18),
+                Text = "Select one or more items.",
+                TextSize = 12,
+                TextTransparency = 0.5,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                Parent = MenuTable.Menu,
+            })
+
+            local MultiCloseButton = New("ImageButton", {
+                BackgroundTransparency = 1,
+                Image = CloseIcon and CloseIcon.Url or "",
+                ImageColor3 = "FontColor",
+                ImageRectOffset = CloseIcon and CloseIcon.ImageRectOffset or Vector2.zero,
+                ImageRectSize = CloseIcon and CloseIcon.ImageRectSize or Vector2.zero,
+                ImageTransparency = 0.35,
+                Position = UDim2.new(1, -38, 0, 14),
+                Size = UDim2.fromOffset(22, 22),
+                Parent = MenuTable.Menu,
+            })
+            MultiCloseButton.MouseButton1Click:Connect(function()
+                MenuTable:Close()
+            end)
+
+            SearchBox = New("TextBox", {
+                BackgroundColor3 = "ElementColor",
+                PlaceholderText = "Search items...",
+                Position = UDim2.fromOffset(14, 68),
+                Size = UDim2.new(1, -28, 0, 38),
+                TextSize = 13,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                Visible = false,
+                ZIndex = MenuTable.Menu.ZIndex + 1,
+                Parent = MenuTable.Menu,
+            })
+            New("UIPadding", {
+                PaddingLeft = UDim.new(0, 12),
+                PaddingRight = UDim.new(0, 12),
+                Parent = SearchBox,
+            })
+            table.insert(
+                Library.Corners,
+                New("UICorner", {
+                    CornerRadius = UDim.new(0, Library.CornerRadius / 2),
+                    Parent = SearchBox,
+                })
+            )
+            New("UIStroke", {
+                Color = "OutlineColor",
+                Parent = SearchBox,
+            })
+
+            local MultiFooter = New("Frame", {
+                AnchorPoint = Vector2.new(0, 1),
+                BackgroundTransparency = 1,
+                Position = UDim2.new(0, 0, 1, 0),
+                Size = UDim2.new(1, 0, 0, MultiDropdownFooterHeight),
+                Parent = MenuTable.Menu,
+            })
+            New("UIPadding", {
+                PaddingBottom = UDim.new(0, 10),
+                PaddingLeft = UDim.new(0, 12),
+                PaddingRight = UDim.new(0, 12),
+                PaddingTop = UDim.new(0, 10),
+                Parent = MultiFooter,
+            })
+            New("UIListLayout", {
+                FillDirection = Enum.FillDirection.Horizontal,
+                Padding = UDim.new(0, 6),
+                Parent = MultiFooter,
+            })
+
+            local IsDictionary = not IsSequentialArray(Dropdown.Values)
+            local function SetAllMultiValues(Selected)
+                for Key, RawValue in Dropdown.Values do
+                    local Value = IsDictionary and Key or RawValue
+                    if not table.find(Dropdown.DisabledValues, Value) then
+                        Dropdown.Value[Value] = Selected and true or nil
+                    end
+                end
+
+                Dropdown:Display()
+                for _, Row in Pool do
+                    Row:UpdateButton()
+                end
+                Library:UpdateDependencyBoxes()
+                Dropdown:RunChanged()
+            end
+
+            local function CreateMultiFooterButton(Text, BackgroundColor, Callback)
+                local Button = New("TextButton", {
+                    BackgroundColor3 = BackgroundColor,
+                    Size = UDim2.new(1 / 3, -4, 1, 0),
+                    Text = Text,
+                    TextColor3 = BackgroundColor == "AccentColor" and "BackgroundColor" or "FontColor",
+                    TextSize = 12,
+                    Parent = MultiFooter,
+                })
+                table.insert(
+                    Library.Corners,
+                    New("UICorner", {
+                        CornerRadius = UDim.new(0, Library.CornerRadius / 2),
+                        Parent = Button,
+                    })
+                )
+                Button.MouseButton1Click:Connect(Callback)
+                return Button
+            end
+
+            CreateMultiFooterButton("Select All", "ElementColor", function()
+                SetAllMultiValues(true)
+            end)
+            CreateMultiFooterButton("Unselect All", "ElementColor", function()
+                SetAllMultiValues(false)
+            end)
+            CreateMultiFooterButton("Done", "AccentColor", function()
+                MenuTable:Close()
+            end)
+        end
+
         local ItemHeight = 21
         local PoolSize = math.max(1, Info.MaxVisibleDropdownItems + 2)
-        local Pool = {}
         local FilteredEntries = {}
 
         function Dropdown:RecalculateListSize(Count)
             local ItemCount = Count or #FilteredEntries
             local Y = math.clamp(ItemCount * ItemHeight, 0, Info.MaxVisibleDropdownItems * ItemHeight)
 
-            MenuTable.Menu.CanvasSize = UDim2.fromOffset(0, ItemCount * ItemHeight)
+            if Info.Multi then
+                local VisibleRows = math.clamp(ItemCount, 1, Info.MaxVisibleDropdownItems)
+                MultiDropdownHeight = math.clamp(
+                    MultiDropdownListTop + VisibleRows * ItemHeight + MultiDropdownFooterHeight,
+                    250,
+                    420
+                )
+                MenuTable.Menu.CanvasSize = UDim2.fromOffset(
+                    0,
+                    MultiDropdownListTop + ItemCount * ItemHeight + MultiDropdownFooterHeight
+                )
+                MenuTable:SetSize(function()
+                    return UDim2.fromOffset(380, MultiDropdownHeight)
+                end)
+            else
+                MenuTable.Menu.CanvasSize = UDim2.fromOffset(0, ItemCount * ItemHeight)
 
-            MenuTable:SetSize(function()
-                return UDim2.fromOffset((DisplayContainer.AbsoluteSize.X / Library.DPIScale), Y)
-            end)
+                MenuTable:SetSize(function()
+                    return UDim2.fromOffset((DisplayContainer.AbsoluteSize.X / Library.DPIScale), Y)
+                end)
+            end
         end
 
         function Dropdown:UpdateColors()
@@ -6590,7 +6752,14 @@ do
             end
 
             if #Str > 25 then
-                Str = Str:sub(1, 22) .. "..."
+                local Truncated = Str:sub(1, 22)
+                local LastSpace = Truncated:match("^.*() ")
+
+                if LastSpace and LastSpace > 1 then
+                    Truncated = Truncated:sub(1, LastSpace - 1)
+                end
+
+                Str = Truncated .. "..."
             end
 
             DisplayButton.Text = (Str == "" and "---" or Str)
@@ -6699,7 +6868,10 @@ do
             end
 
             local MaxFirst = Total - PoolSize + 1
-            local ScrollY = MenuTable.Menu.CanvasPosition.Y / Library.DPIScale
+            local ScrollY = math.max(
+                0,
+                MenuTable.Menu.CanvasPosition.Y / Library.DPIScale - MultiDropdownListTop
+            )
             local Index = math.floor(ScrollY / ItemHeight) + 1
             return math.clamp(Index, 1, MaxFirst)
         end
@@ -6721,7 +6893,10 @@ do
                 end
 
                 Row.Container.Visible = true
-                Row.Container.Position = UDim2.fromOffset(0, (DataIndex - 1) * ItemHeight)
+                Row.Container.Position = UDim2.fromOffset(
+                    0,
+                    MultiDropdownListTop + (DataIndex - 1) * ItemHeight
+                )
 
                 local IsLast = DataIndex == Total
                 Row.Corner.BottomRightRadius = IsLast and UDim.new(0, Library.CornerRadius / 2) or UDim.new(0, 0)
@@ -6729,7 +6904,11 @@ do
 
                 Row.Button.Text = Entry.FormattedValue
 
-                if Entry.ValueImage then
+                if Info.Multi then
+                    Row.Image.Visible = false
+                    Row.Button.Size = UDim2.new(1, -28, 0, ItemHeight)
+                    Row.Button.Position = UDim2.fromOffset(28, 0)
+                elseif Entry.ValueImage then
                     Row.Image.Visible = true
                     Row.Image.Image = Entry.ValueImage.Url
                     Row.Image.ImageRectOffset = Entry.ValueImage.ImageRectOffset or Vector2.zero
@@ -6871,6 +7050,18 @@ do
                 Parent = Container,
             })
 
+            local CheckImage = New("ImageLabel", {
+                BackgroundTransparency = 1,
+                Image = CheckIcon and CheckIcon.Url or "",
+                ImageColor3 = "AccentColor",
+                ImageRectOffset = CheckIcon and CheckIcon.ImageRectOffset or Vector2.zero,
+                ImageRectSize = CheckIcon and CheckIcon.ImageRectSize or Vector2.zero,
+                Position = UDim2.fromOffset(8, 3),
+                Size = UDim2.fromOffset(16, 16),
+                Visible = false,
+                Parent = Container,
+            })
+
             local Button = New("TextButton", {
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, 0, 0, ItemHeight),
@@ -6889,6 +7080,7 @@ do
             Row.Container = Container
             Row.Corner = Corner
             Row.Image = Image
+            Row.CheckImage = CheckImage
             Row.Button = Button
 
             function Row:UpdateButton()
@@ -6904,10 +7096,11 @@ do
                     Selected = Dropdown.Value == Entry.Value
                 end
 
-                Container.BackgroundTransparency = Selected and 0 or 1
+                Container.BackgroundTransparency = Info.Multi and 1 or Selected and 0 or 1
                 Button.TextTransparency = Entry.IsDisabled and 0.8 or Selected and 0 or 0.5
+                CheckImage.Visible = Info.Multi and Selected and not Entry.IsDisabled
 
-                if Entry.ValueImage then
+                if Entry.ValueImage and not Info.Multi then
                     Image.ImageTransparency = Entry.IsDisabled and 0.8 or Selected and 0 or 0.5
                 end
             end
@@ -9031,7 +9224,7 @@ function Library:CreateWindow(WindowInfo)
 
         SearchBox = New("TextBox", {
             BackgroundColor3 = "ElementColor",
-            PlaceholderText = "",
+            PlaceholderText = "Search",
             Size = WindowInfo.SearchbarSize,
             TextScaled = false,
             TextSize = 12,
@@ -9096,6 +9289,7 @@ function Library:CreateWindow(WindowInfo)
             end
 
             SearchBoxExpanded = Expanded
+            SearchBox.PlaceholderText = Expanded and "Search" or ""
             SearchBox.BackgroundTransparency = Expanded and 0 or 1
             SearchBoxStroke.Transparency = Expanded and 0 or 1
             SearchBoxPadding.PaddingLeft = UDim.new(0, Expanded and 24 or 0)
