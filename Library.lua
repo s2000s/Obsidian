@@ -2525,6 +2525,7 @@ function Library:AddContextMenu(
         Signal = nil,
 
         Size = Size,
+        Centered = false,
 
         AutoSizeY = List == 1,
         OpenCloseTween = nil,
@@ -2547,15 +2548,20 @@ function Library:AddContextMenu(
         })
     end
 
-    function Table:Open()
-        if CurrentMenu == Table then
-            return
-        elseif CurrentMenu then
-            CurrentMenu:Close()
-        end
+    local function PositionMenu(TargetSize)
+        if Table.Centered then
+            local CenterFrame = Library.WindowContainer and Library.WindowContainer.Parent
+            if CenterFrame then
+                local Width = TargetSize and TargetSize.X.Offset or Menu.AbsoluteSize.X
+                local Height = TargetSize and TargetSize.Y.Offset or Menu.AbsoluteSize.Y
 
-        CurrentMenu = Table
-        Table.Active = true
+                Menu.Position = UDim2.fromOffset(
+                    math.floor(CenterFrame.AbsolutePosition.X + (CenterFrame.AbsoluteSize.X - Width) / 2),
+                    math.floor(CenterFrame.AbsolutePosition.Y + (CenterFrame.AbsoluteSize.Y - Height) / 2)
+                )
+                return
+            end
+        end
 
         if typeof(Offset) == "function" then
             Menu.Position = UDim2.fromOffset(
@@ -2568,8 +2574,20 @@ function Library:AddContextMenu(
                 math.floor(Holder.AbsolutePosition.Y + Offset[2])
             )
         end
+    end
+
+    function Table:Open()
+        if CurrentMenu == Table then
+            return
+        elseif CurrentMenu then
+            CurrentMenu:Close()
+        end
+
+        CurrentMenu = Table
+        Table.Active = true
 
         local TargetSize = typeof(Table.Size) == "function" and Table.Size() or Table.Size
+        PositionMenu(TargetSize)
 
         if typeof(ActiveCallback) == "function" then
             Library:SafeCallback(ActiveCallback, true)
@@ -2618,17 +2636,7 @@ function Library:AddContextMenu(
         end
 
         Table.Signal = Holder:GetPropertyChangedSignal("AbsolutePosition"):Connect(function()
-            if typeof(Offset) == "function" then
-                Menu.Position = UDim2.fromOffset(
-                    math.floor(Holder.AbsolutePosition.X + Offset()[1]),
-                    math.floor(Holder.AbsolutePosition.Y + Offset()[2])
-                )
-            else
-                Menu.Position = UDim2.fromOffset(
-                    math.floor(Holder.AbsolutePosition.X + Offset[1]),
-                    math.floor(Holder.AbsolutePosition.Y + Offset[2])
-                )
-            end
+            PositionMenu()
 
             if not Library:IsInsideFrame(Library.WindowContainer, Holder) and Table.Active then
                 Table:Close()
@@ -6524,6 +6532,7 @@ do
             "Dropdown"
         )
         Dropdown.Menu = MenuTable
+        MenuTable.Centered = Info.Multi == true
 
         local MultiDropdownListTop = 0
         local MultiDropdownFooterHeight = 0
@@ -9228,6 +9237,7 @@ function Library:CreateWindow(WindowInfo)
             Size = WindowInfo.SearchbarSize,
             TextScaled = false,
             TextSize = 12,
+            TextXAlignment = Enum.TextXAlignment.Left,
             Visible = not (WindowInfo.DisableSearch or false),
             Parent = RightWrapper,
         })
