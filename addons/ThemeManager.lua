@@ -58,7 +58,7 @@ local function EnsureElementColors(ThemeData)
     ThemeData.ElementDisabledColor = ThemeData.ElementDisabledColor or BackgroundColor:ToHex()
 end
 
-local WorkSansFont = Font.fromId(12187373327, Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+local WorkSansFont = Font.fromId(12187373327, Enum.FontWeight.Medium, Enum.FontStyle.Normal)
 
 local function ResolveFontFace(FontFace)
     if typeof(FontFace) == "EnumItem" then
