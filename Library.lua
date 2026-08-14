@@ -9031,8 +9031,12 @@ function Library:CreateWindow(WindowInfo)
         SearchBox = New("TextBox", {
             BackgroundColor3 = "ElementColor",
             PlaceholderText = "Search",
+            PlaceholderTextColor3 = function()
+                return Library:GetDarkerColor(Library.Scheme.FontColor)
+            end,
             Size = WindowInfo.SearchbarSize,
-            TextScaled = true,
+            TextScaled = false,
+            TextSize = 12,
             Visible = not (WindowInfo.DisableSearch or false),
             Parent = RightWrapper,
         })
@@ -9067,7 +9071,7 @@ function Library:CreateWindow(WindowInfo)
                 ImageColor3 = "FontColor",
                 ImageRectOffset = SearchIcon.ImageRectOffset,
                 ImageRectSize = SearchIcon.ImageRectSize,
-                ImageTransparency = 0.5,
+                ImageTransparency = 0.35,
                 Position = UDim2.fromScale(0.5, 0.5),
                 Size = UDim2.fromOffset(16, 16),
                 Parent = SearchBox,
