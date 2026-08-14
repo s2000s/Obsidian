@@ -17,6 +17,7 @@ local Window = Library:CreateWindow({
     MobileButtonsSide = "Left",
     SidebarCompacted = true,
     CornerRadius = 5,
+	CollapsibleSearch = true,
 })
 
 -- CALLBACK NOTE:

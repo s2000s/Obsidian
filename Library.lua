@@ -366,6 +366,7 @@ local Templates = {
         Resizable = true,
 
         SearchbarSize = UDim2.fromScale(1, 1),
+        CollapsibleSearch = true,
         GlobalSearch = false,
 
         CornerRadius = 4,
@@ -8723,6 +8724,9 @@ function Library:CreateWindow(WindowInfo)
     local WindowIcon
     local RightWrapper
     local SearchBox
+    local SearchBoxExpanded = true
+    local SearchBoxTween
+    local SetSearchBoxExpanded
     local CurrentTabInfo
     local CurrentTabLabel
     local CurrentTabDescription
@@ -8974,6 +8978,56 @@ function Library:CreateWindow(WindowInfo)
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
                 Parent = SearchBox,
             })
+        end
+
+        SetSearchBoxExpanded = function(Expanded, Instant)
+            if not WindowInfo.CollapsibleSearch or WindowInfo.DisableSearch then
+                return
+            end
+
+            if not Expanded and SearchBox.Text ~= "" then
+                return
+            end
+
+            SearchBoxExpanded = Expanded
+            SearchBox.PlaceholderText = Expanded and "Search" or ""
+
+            local TargetSize
+            if Expanded then
+                TargetSize = IsDefaultSearchbarSize and (CurrentTabInfo.Visible and UDim2.fromScale(0.5, 1) or UDim2.fromScale(1, 1))
+                    or WindowInfo.SearchbarSize
+            else
+                TargetSize = UDim2.new(0, 32, 1, 0)
+            end
+
+            if SearchBoxTween then
+                StopTween(SearchBoxTween, true)
+                SearchBoxTween = nil
+            end
+
+            if Instant then
+                SearchBox.Size = TargetSize
+                return
+            end
+
+            SearchBoxTween = TweenService:Create(SearchBox, Library.TweenInfo, {
+                Size = TargetSize,
+            })
+            SearchBoxTween:Play()
+        end
+
+        if WindowInfo.CollapsibleSearch and not WindowInfo.DisableSearch then
+            SetSearchBoxExpanded(false, true)
+
+            Library:GiveSignal(SearchBox.Focused:Connect(function()
+                SetSearchBoxExpanded(true)
+            end))
+
+            Library:GiveSignal(SearchBox.FocusLost:Connect(function()
+                if SearchBox.Text == "" then
+                    SetSearchBoxExpanded(false)
+                end
+            end))
         end
 
         if MoveIcon then
@@ -9315,16 +9369,16 @@ function Library:CreateWindow(WindowInfo)
     function Window:ShowTabInfo(Name, Description)
         CurrentTabLabel.Text = Name
         CurrentTabDescription.Text = Description
+        CurrentTabInfo.Visible = true
 
-        if IsDefaultSearchbarSize then
+        if IsDefaultSearchbarSize and (not WindowInfo.CollapsibleSearch or SearchBoxExpanded) then
             SearchBox.Size = UDim2.fromScale(0.5, 1)
         end
-        CurrentTabInfo.Visible = true
     end
 
     function Window:HideTabInfo()
         CurrentTabInfo.Visible = false
-        if IsDefaultSearchbarSize then
+        if IsDefaultSearchbarSize and (not WindowInfo.CollapsibleSearch or SearchBoxExpanded) then
             SearchBox.Size = UDim2.fromScale(1, 1)
         end
     end
