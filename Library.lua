@@ -6540,6 +6540,14 @@ do
         local Pool = {}
 
         if Info.Multi then
+            MenuTable.Menu.BackgroundColor3 = Library.Scheme.MainColor
+            Library.Registry[MenuTable.Menu].BackgroundColor3 = "MainColor"
+
+            local MultiDropdownCorner = MenuTable.Menu:FindFirstChildOfClass("UICorner")
+            if MultiDropdownCorner then
+                MultiDropdownCorner.CornerRadius = UDim.new(0, 7)
+            end
+
             MultiDropdownListTop = 114
             MultiDropdownFooterHeight = 58
 
