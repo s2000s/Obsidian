@@ -768,7 +768,7 @@ SaveManager:BuildConfigSection(Tabs["UI Settings"])
 
 -- Builds our theme menu (with plenty of built in themes) on the left side
 -- NOTE: you can also call ThemeManager:ApplyToGroupbox to add it to a specific groupbox
-ThemeManager:ApplyToTab(Tabs["UI Settings"])
+-- ThemeManager:ApplyToTab(Tabs["UI Settings"])
 
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!

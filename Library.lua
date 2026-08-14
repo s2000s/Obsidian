@@ -268,7 +268,7 @@ local Library = {
         ElementHoverColor = Color3.fromRGB(48, 52, 58),
         ElementDisabledColor = Color3.fromRGB(16, 18, 21),
         AccentColor = Color3.fromRGB(231, 184, 119),
-        OutlineColor = Color3.fromRGB(44, 48, 54),
+        OutlineColor = Color3.fromRGB(36, 39, 44),
         FontColor = Color3.fromRGB(242, 244, 247),
         Font = Font.fromEnum(Enum.Font.Code),
 

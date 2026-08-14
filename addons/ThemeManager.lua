@@ -76,7 +76,7 @@ local ThemeManager = {
                 ElementDisabledColor = "101215",
                 AccentColor = "e7b877",
                 BackgroundColor = "0a0b0d",
-                OutlineColor = "2c3036",
+                OutlineColor = "24272c",
                 BackgroundImage = "",
             },
         },
