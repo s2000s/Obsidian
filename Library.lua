@@ -9,7 +9,7 @@ local UserInputService: UserInputService = cloneref(game:GetService("UserInputSe
 local TextService: TextService = cloneref(game:GetService("TextService"))
 local Teams: Teams = cloneref(game:GetService("Teams"))
 local TweenService: TweenService = cloneref(game:GetService("TweenService"))
-local WorkSansFont = Font.fromId(12187373327, Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+local WorkSansFont = Font.fromId(12187373327, Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
 
 local getgenv = getgenv or function()
     return shared
