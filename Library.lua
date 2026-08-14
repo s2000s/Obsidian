@@ -310,6 +310,31 @@ else
     Library.OriginalMinSize = Library.IsMobile and Vector2.new(480, 240) or Vector2.new(480, 360)
 end
 
+local function BindElementTitleHover(Holder, Label)
+    if not Holder or not Label then
+        return
+    end
+
+    Holder.MouseEnter:Connect(function()
+        if Label.TextTransparency >= 0.8 then
+            return
+        end
+
+        TweenService:Create(Label, Library.TweenInfo, {
+            TextTransparency = 0.25,
+        }):Play()
+    end)
+    Holder.MouseLeave:Connect(function()
+        if Label.TextTransparency >= 0.8 then
+            return
+        end
+
+        TweenService:Create(Label, Library.TweenInfo, {
+            TextTransparency = 0.4,
+        }):Play()
+    end)
+end
+
 local Templates = {
     --// UI \\--
     Frame = {
@@ -4806,7 +4831,7 @@ do
 
                 Button.Tween = TweenService:Create(Button.Base, Library.TweenInfo, {
                     BackgroundColor3 = Library.Scheme.ElementHoverColor,
-                    TextTransparency = 0,
+                    TextTransparency = 0.25,
                 })
                 Button.Tween:Play()
             end)
@@ -5699,7 +5724,7 @@ do
                 return
             end
 
-            Label.TextTransparency = Input.Disabled and 0.8 or 0
+            Label.TextTransparency = Input.Disabled and 0.8 or 0.4
             Box.TextTransparency = Input.Disabled and 0.8 or 0
             Box.BackgroundColor3 = Input.Disabled and Library.Scheme.ElementDisabledColor or Library.Scheme.ElementColor
             Library.Registry[Box].BackgroundColor3 = Input.Disabled and "ElementDisabledColor" or "ElementColor"
@@ -5790,6 +5815,7 @@ do
             Input.TooltipTable.Disabled = Input.Disabled
         end
 
+        BindElementTitleHover(Holder, Label)
         Groupbox:Resize()
 
         Input.Holder = Holder
@@ -5969,7 +5995,7 @@ do
             end
 
             if SliderLabel then
-                SliderLabel.TextTransparency = Slider.Disabled and 0.8 or 0
+                SliderLabel.TextTransparency = Slider.Disabled and 0.8 or 0.4
             end
             DisplayLabel.TextTransparency = Slider.Disabled and 0.8 or 0
             
@@ -6222,6 +6248,7 @@ do
         end
 
         Slider:UpdateColors()
+        BindElementTitleHover(Holder, SliderLabel)
         Slider:Display()
         Groupbox:Resize()
 
@@ -6509,7 +6536,7 @@ do
                 return
             end
 
-            Label.TextTransparency = Dropdown.Disabled and 0.8 or 0
+            Label.TextTransparency = Dropdown.Disabled and 0.8 or 0.4
             DisplayButton.TextTransparency = Dropdown.Disabled and 0.8 or 0
             DisplayImage.ImageTransparency = Dropdown.Disabled and 0.8 or 0
             ArrowImage.ImageTransparency = Dropdown.Disabled and 0.8 or MenuTable.Active and 0 or 0.5
@@ -7255,6 +7282,7 @@ do
         end
 
         Dropdown:UpdateColors()
+        BindElementTitleHover(Holder, Label)
         Dropdown:Display()
         Dropdown:BuildDropdownList()
         Groupbox:Resize()
