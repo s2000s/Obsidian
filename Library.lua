@@ -8814,7 +8814,7 @@ function Library:CreateWindow(WindowInfo)
     local SearchBoxStroke
     local SearchBoxPadding
     local SearchIconImage
-    local SearchPlaceholderLabel
+    local SearchButton
     local SearchBoxExpanded = true
     local SearchBoxTween
     local SetSearchBoxExpanded
@@ -9043,21 +9043,6 @@ function Library:CreateWindow(WindowInfo)
             Parent = SearchBox,
         })
 
-        SearchPlaceholderLabel = New("TextLabel", {
-            AnchorPoint = Vector2.new(0, 0.5),
-            BackgroundTransparency = 1,
-            Position = UDim2.new(0, 32, 0.5, 0),
-            Size = UDim2.new(1, -40, 0, 16),
-            Text = "Search",
-            TextColor3 = function()
-                return Library:GetDarkerColor(Library.Scheme.FontColor)
-            end,
-            TextSize = 12,
-            TextXAlignment = Enum.TextXAlignment.Left,
-            TextYAlignment = Enum.TextYAlignment.Center,
-            Visible = not WindowInfo.CollapsibleSearch and not WindowInfo.DisableSearch,
-            Parent = SearchBox,
-        })
         table.insert(
             Library.Corners,
             New("UICorner", {
@@ -9080,17 +9065,26 @@ function Library:CreateWindow(WindowInfo)
         local SearchIcon = Library:GetIcon("search")
         if SearchIcon then
             SearchIconImage = New("ImageLabel", {
-                AnchorPoint = Vector2.new(0.5, 0.5),
+                AnchorPoint = Vector2.new(0, 0.5),
                 Image = SearchIcon.Url,
                 ImageColor3 = "FontColor",
                 ImageRectOffset = SearchIcon.ImageRectOffset,
                 ImageRectSize = SearchIcon.ImageRectSize,
                 ImageTransparency = 0.35,
-                Position = UDim2.fromScale(0.5, 0.5),
+                Position = UDim2.new(0, 8, 0.5, 0),
                 Size = UDim2.fromOffset(16, 16),
                 Parent = SearchBox,
             })
         end
+
+        SearchButton = New("ImageButton", {
+            BackgroundTransparency = 1,
+            Position = UDim2.fromScale(0, 0),
+            Size = UDim2.fromScale(1, 1),
+            Visible = WindowInfo.CollapsibleSearch and not WindowInfo.DisableSearch,
+            ZIndex = SearchBox.ZIndex + 1,
+            Parent = SearchBox,
+        })
 
         SetSearchBoxExpanded = function(Expanded, Instant)
             if not WindowInfo.CollapsibleSearch or WindowInfo.DisableSearch then
@@ -9106,12 +9100,12 @@ function Library:CreateWindow(WindowInfo)
             SearchBoxStroke.Transparency = Expanded and 0 or 1
             SearchBoxPadding.PaddingLeft = UDim.new(0, Expanded and 32 or 0)
             SearchBoxPadding.PaddingRight = UDim.new(0, Expanded and 8 or 0)
-            SearchPlaceholderLabel.Visible = Expanded and SearchBox.Text == ""
+            SearchButton.Visible = not Expanded
 
             if SearchIconImage then
                 SearchIconImage.Position = Expanded
-                    and UDim2.new(0, 16, 0.5, 0)
-                    or UDim2.fromScale(0.5, 0.5)
+                    and UDim2.new(0, 8, 0.5, 0)
+                    or UDim2.new(0, 6, 0.5, 0)
             end
 
             local TargetSize
@@ -9137,6 +9131,11 @@ function Library:CreateWindow(WindowInfo)
             })
             SearchBoxTween:Play()
         end
+
+        Library:GiveSignal(SearchButton.MouseButton1Click:Connect(function()
+            SetSearchBoxExpanded(true)
+            SearchBox:CaptureFocus()
+        end))
 
         if WindowInfo.CollapsibleSearch and not WindowInfo.DisableSearch then
             SetSearchBoxExpanded(false, true)
@@ -11832,9 +11831,6 @@ function Library:CreateWindow(WindowInfo)
     --// Execution \\--
     Library:GiveSignal(SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
         Library:UpdateSearch(SearchBox.Text)
-        if SearchPlaceholderLabel then
-            SearchPlaceholderLabel.Visible = SearchBoxExpanded and SearchBox.Text == ""
-        end
     end))
 
     Library:GiveSignal(UserInputService.InputBegan:Connect(function(Input: InputObject)
