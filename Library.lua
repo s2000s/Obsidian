@@ -10307,16 +10307,16 @@ function Library:CreateWindow(WindowInfo)
 
                 GroupboxLabel = New("TextLabel", {
                     BackgroundTransparency = 1,
-                    Position = UDim2.fromOffset(BoxIcon and 24 or 0, 0),
-                    Size = UDim2.new(1, 0, 0, 34),
+                    Position = UDim2.fromOffset(BoxIcon and 28 or 0, 0),
+                    Size = UDim2.new(1, BoxIcon and -28 or 0, 0, 34),
                     Text = Info.Name,
-                    TextSize = 15,
+                    TextSize = 14,
                     TextXAlignment = Enum.TextXAlignment.Left,
                     Parent = GroupboxHolder,
                 })
                 New("UIPadding", {
-                    PaddingLeft = UDim.new(0, 12),
-                    PaddingRight = UDim.new(0, 12),
+                    PaddingLeft = UDim.new(0, 6),
+                    PaddingRight = UDim.new(0, 34),
                     Parent = GroupboxLabel,
                 })
 
