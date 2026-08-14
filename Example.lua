@@ -18,6 +18,8 @@ local Window = Library:CreateWindow({
     SidebarCompacted = true,
     CornerRadius = 5,
 	CollapsibleSearch = true,
+	GlobalSearch = true,
+	Resizable = false,
 })
 
 Window:SetAnimations({ ToggleWindow = true, TabSwitch = true, Groupbox = true, Dropdown = true, KeyPicker = true }, 0.22, 26, "bottom")
