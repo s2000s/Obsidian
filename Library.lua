@@ -8880,8 +8880,8 @@ function Library:CreateWindow(WindowInfo)
 
         DividerLine = New("Frame", {
             BackgroundColor3 = "OutlineColor",
-            Position = UDim2.fromOffset(InitialLeftWidth, 0),
-            Size = UDim2.new(0, 1, 1, -21),
+            Position = UDim2.fromOffset(InitialLeftWidth, 49),
+            Size = UDim2.new(0, 1, 1, -70),
             Parent = MainFrame,
             ZIndex = 2
         })
@@ -8947,14 +8947,14 @@ function Library:CreateWindow(WindowInfo)
         end
 
         WindowTitle = New("TextLabel", {
-            AnchorPoint = Vector2.new(0.5, 0.5),
+            AnchorPoint = Vector2.new(0, 0.5),
             BackgroundTransparency = 1,
-            Position = UDim2.fromScale(0.5, 0.5),
+            Position = UDim2.new(0, WindowInfo.Icon and WindowInfo.IconSize.X.Offset + 12 or 16, 0.5, 0),
             Size = UDim2.new(0.4, 0, 1, 0),
             Text = WindowInfo.Title,
             TextSize = 20,
             TextTruncate = Enum.TextTruncate.AtEnd,
-            TextXAlignment = Enum.TextXAlignment.Center,
+            TextXAlignment = Enum.TextXAlignment.Left,
             TextYAlignment = Enum.TextYAlignment.Center,
             ZIndex = 3,
             Parent = TopBar,
@@ -8971,7 +8971,7 @@ function Library:CreateWindow(WindowInfo)
 
         New("UIListLayout", {
             FillDirection = Enum.FillDirection.Horizontal,
-            HorizontalAlignment = Enum.HorizontalAlignment.Left,
+            HorizontalAlignment = Enum.HorizontalAlignment.Right,
             VerticalAlignment = Enum.VerticalAlignment.Center,
             Padding = UDim.new(0, 8),
             Parent = RightWrapper,
