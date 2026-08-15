@@ -6534,14 +6534,38 @@ do
         local Pool = {}
         local FilteredEntries = {}
 
+        local function GetDropdownMenuWidth()
+            local BaseWidth = DisplayContainer.AbsoluteSize.X / Library.DPIScale
+            local Width = BaseWidth
+            local SampleButton = Pool[1] and Pool[1].Button
+
+            if not SampleButton then
+                return Width
+            end
+
+            for _, Entry in FilteredEntries do
+                local TextWidth = Library:GetTextBounds(
+                    Entry.FormattedValue,
+                    SampleButton.FontFace,
+                    SampleButton.TextSize,
+                    10000
+                )
+                local ImageWidth = Entry.ValueImage and 18 or 0
+                Width = math.max(Width, TextWidth + 28 + ImageWidth)
+            end
+
+            return math.min(Width, 320)
+        end
+
         function Dropdown:RecalculateListSize(Count)
             local ItemCount = Count or #FilteredEntries
             local Y = math.clamp(ItemCount * ItemHeight, 0, Info.MaxVisibleDropdownItems * ItemHeight)
+            local MenuWidth = GetDropdownMenuWidth()
 
             MenuTable.Menu.CanvasSize = UDim2.fromOffset(0, ItemCount * ItemHeight)
 
             MenuTable:SetSize(function()
-                return UDim2.fromOffset((DisplayContainer.AbsoluteSize.X / Library.DPIScale), Y)
+                return UDim2.fromOffset(MenuWidth, Y)
             end)
         end
 
