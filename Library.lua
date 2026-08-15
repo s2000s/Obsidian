@@ -30,8 +30,8 @@ local Options = {}
 local Tooltips = {}
 
 local BaseURL = "https://raw.githubusercontent.com/s2000s/Obsidian/refs/heads/main/"
-local BuildCode = "OB-20260816-01"
-print(string.format("[Obsidian] Build Code: %s", BuildCode))
+local CommitTime = "2026-08-16 03:07:02"
+print(string.format("[Obsidian] Commit Time: %s", CommitTime))
 
 local CustomImageManager = {}
 local CustomImageManagerAssets = {
