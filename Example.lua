@@ -1,10 +1,7 @@
-local function loadLocal(path)
-    return loadstring(readfile(path))()
-end
-
-local Library = loadLocal("Obsidian/Library.lua")
-local ThemeManager = loadLocal("Obsidian/addons/ThemeManager.lua")
-local SaveManager = loadLocal("Obsidian/addons/SaveManager.lua")
+local repo = "https://raw.githubusercontent.com/s2000s/Obsidian/main/"
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 
 local Options = Library.Options
 local Toggles = Library.Toggles
