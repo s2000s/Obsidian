@@ -30,7 +30,7 @@ local Options = {}
 local Tooltips = {}
 
 local BaseURL = "https://raw.githubusercontent.com/s2000s/Obsidian/refs/heads/main/"
-local CommitTime = "2026-08-16 03:07:02"
+local CommitTime = "2026-08-16 03:12:05"
 print(string.format("[Obsidian] Commit Time: %s", CommitTime))
 
 local CustomImageManager = {}
