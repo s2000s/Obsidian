@@ -30,7 +30,7 @@ local Options = {}
 local Tooltips = {}
 
 local BaseURL = "https://raw.githubusercontent.com/s2000s/Obsidian/refs/heads/main/"
-local CommitTime = "2026-08-16 03:12:05"
+local CommitTime = "2026-08-16 03:16:00"
 print(string.format("[Obsidian] Commit Time: %s", CommitTime))
 
 local CustomImageManager = {}
@@ -6401,17 +6401,11 @@ do
             BackgroundTransparency = 1,
             Size = UDim2.new(1, 0, 0, 24),
             Text = "---",
-            TextWrapped = false,
-            TextScaled = true,
+            TextTruncate = Enum.TextTruncate.AtEnd,
             TextSize = 14,
             TextXAlignment = Enum.TextXAlignment.Left,
             ZIndex = 2,
             Parent = DisplayContainer,
-        })
-        New("UITextSizeConstraint", {
-            MinTextSize = 10,
-            MaxTextSize = 14,
-            Parent = DisplayButton,
         })
 
         New("UIPadding", {
@@ -6592,6 +6586,8 @@ do
             local IsDictionary = not IsSequentialArray(Dropdown.Values)
 
             if Info.Multi then
+                local SelectedValues = {}
+
                 for Key, RawValue in Dropdown.Values do
                     local Value = IsDictionary and Key or RawValue
 
@@ -6600,13 +6596,14 @@ do
                             ValueImage = GetValueImage(Value, RawValue)
                         end
 
-                        Str = Str
-                            .. (Info.FormatDisplayValue and tostring(Info.FormatDisplayValue(RawValue)) or tostring(RawValue))
-                            .. ", "
+                        table.insert(
+                            SelectedValues,
+                            Info.FormatDisplayValue and tostring(Info.FormatDisplayValue(RawValue)) or tostring(RawValue)
+                        )
                     end
                 end
 
-                Str = Str:sub(1, #Str - 2)
+                Str = #SelectedValues > 2 and string.format("%d selected", #SelectedValues) or table.concat(SelectedValues, ", ")
             else
                 local DisplayValue = Dropdown.Value
                 if IsDictionary and Dropdown.Value ~= nil then
