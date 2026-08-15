@@ -30,7 +30,7 @@ local Options = {}
 local Tooltips = {}
 
 local BaseURL = "https://raw.githubusercontent.com/s2000s/Obsidian/refs/heads/main/"
-local CommitTime = "2026-08-16 03:29:00"
+local CommitTime = "2026-08-16 03:37:00"
 print(string.format("[Obsidian] Commit Time: %s", CommitTime))
 
 local CustomImageManager = {}
@@ -6526,9 +6526,10 @@ do
             "Dropdown"
         )
         Dropdown.Menu = MenuTable
+        MenuTable.Menu.BackgroundTransparency = 0.08
 
         local ItemHeight = 25
-        local RowHeight = 21
+        local RowHeight = 25
         local PoolSize = math.max(1, Info.MaxVisibleDropdownItems + 2)
         local Pool = {}
         local FilteredEntries = {}
@@ -6873,20 +6874,23 @@ do
 
             local Container = New("Frame", {
                 BackgroundColor3 = "ElementColor",
-                BackgroundTransparency = 0.55,
+                BackgroundTransparency = 1,
                 Size = UDim2.new(1, 0, 0, RowHeight),
                 Visible = false,
                 Parent = MenuTable.Menu,
             })
 
             local Corner = New("UICorner", {
-                CornerRadius = UDim.new(0, 8),
+                CornerRadius = UDim.new(0, 2),
                 Parent = Container,
             }); table.insert(Library.SpecificCorners, Corner)
 
-            New("UIStroke", {
-                Color = "OutlineColor",
-                Transparency = 0.75,
+            local SelectionIndicator = New("Frame", {
+                BackgroundColor3 = "AccentColor",
+                BackgroundTransparency = 0,
+                Position = UDim2.fromOffset(2, 4),
+                Size = UDim2.fromOffset(2, RowHeight - 8),
+                Visible = false,
                 Parent = Container,
             })
 
@@ -6917,6 +6921,7 @@ do
 
             Row.Container = Container
             Row.Corner = Corner
+            Row.SelectionIndicator = SelectionIndicator
             Row.Image = Image
             Row.Button = Button
 
@@ -6933,16 +6938,12 @@ do
                     Selected = Dropdown.Value == Entry.Value
                 end
 
-                Container.BackgroundTransparency = Selected and 0 or 0.55
+                Container.BackgroundTransparency = 1
                 Button.TextTransparency = Entry.IsDisabled and 0.8 or Selected and 0 or 0.5
+                SelectionIndicator.Visible = Selected and not Entry.IsDisabled
 
                 if Entry.ValueImage then
                     Image.ImageTransparency = Entry.IsDisabled and 0.8 or Selected and 0 or 0.5
-                end
-
-                local Registry = Library.Registry[Container]
-                if Registry then
-                    Registry.BackgroundColor3 = "ElementColor"
                 end
             end
 
