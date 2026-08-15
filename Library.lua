@@ -30,7 +30,7 @@ local Options = {}
 local Tooltips = {}
 
 local BaseURL = "https://raw.githubusercontent.com/s2000s/Obsidian/refs/heads/main/"
-local CommitTime = "2026-08-16 03:24:00"
+local CommitTime = "2026-08-16 03:29:00"
 print(string.format("[Obsidian] Commit Time: %s", CommitTime))
 
 local CustomImageManager = {}
@@ -6527,7 +6527,8 @@ do
         )
         Dropdown.Menu = MenuTable
 
-        local ItemHeight = 21
+        local ItemHeight = 25
+        local RowHeight = 21
         local PoolSize = math.max(1, Info.MaxVisibleDropdownItems + 2)
         local Pool = {}
         local FilteredEntries = {}
@@ -6752,10 +6753,6 @@ do
                 Row.Container.Visible = true
                 Row.Container.Position = UDim2.fromOffset(0, (DataIndex - 1) * ItemHeight)
 
-                local IsLast = DataIndex == Total
-                Row.Corner.BottomRightRadius = IsLast and UDim.new(0, Library.CornerRadius / 2) or UDim.new(0, 0)
-                Row.Corner.BottomLeftRadius = IsLast and UDim.new(0, Library.CornerRadius / 2) or UDim.new(0, 0)
-
                 Row.Button.Text = Entry.FormattedValue
 
                 if Entry.ValueImage then
@@ -6763,11 +6760,11 @@ do
                     Row.Image.Image = Entry.ValueImage.Url
                     Row.Image.ImageRectOffset = Entry.ValueImage.ImageRectOffset or Vector2.zero
                     Row.Image.ImageRectSize = Entry.ValueImage.ImageRectSize or Vector2.zero
-                    Row.Button.Size = UDim2.new(1, -18, 0, ItemHeight)
+                    Row.Button.Size = UDim2.new(1, -18, 0, RowHeight)
                     Row.Button.Position = UDim2.fromOffset(18, 0)
                 else
                     Row.Image.Visible = false
-                    Row.Button.Size = UDim2.new(1, 0, 0, ItemHeight)
+                    Row.Button.Size = UDim2.new(1, 0, 0, RowHeight)
                     Row.Button.Position = UDim2.fromOffset(0, 0)
                 end
 
@@ -6876,19 +6873,22 @@ do
 
             local Container = New("Frame", {
                 BackgroundColor3 = "ElementColor",
-                BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, ItemHeight),
+                BackgroundTransparency = 0.55,
+                Size = UDim2.new(1, 0, 0, RowHeight),
                 Visible = false,
                 Parent = MenuTable.Menu,
             })
 
             local Corner = New("UICorner", {
-                TopLeftRadius = UDim.new(0, 0),
-                TopRightRadius = UDim.new(0, 0),
-                BottomRightRadius = UDim.new(0, 0),
-                BottomLeftRadius = UDim.new(0, 0),
+                CornerRadius = UDim.new(0, 8),
                 Parent = Container,
             }); table.insert(Library.SpecificCorners, Corner)
+
+            New("UIStroke", {
+                Color = "OutlineColor",
+                Transparency = 0.75,
+                Parent = Container,
+            })
 
             local Image = New("ImageLabel", {
                 BackgroundTransparency = 1,
@@ -6902,7 +6902,7 @@ do
 
             local Button = New("TextButton", {
                 BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, ItemHeight),
+                Size = UDim2.new(1, 0, 0, RowHeight),
                 Text = "",
                 TextSize = 14,
                 TextTransparency = 0.5,
@@ -6933,11 +6933,16 @@ do
                     Selected = Dropdown.Value == Entry.Value
                 end
 
-                Container.BackgroundTransparency = Selected and 0 or 1
+                Container.BackgroundTransparency = Selected and 0 or 0.55
                 Button.TextTransparency = Entry.IsDisabled and 0.8 or Selected and 0 or 0.5
 
                 if Entry.ValueImage then
                     Image.ImageTransparency = Entry.IsDisabled and 0.8 or Selected and 0 or 0.5
+                end
+
+                local Registry = Library.Registry[Container]
+                if Registry then
+                    Registry.BackgroundColor3 = "ElementColor"
                 end
             end
 
