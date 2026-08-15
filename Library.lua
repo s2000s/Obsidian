@@ -30,7 +30,7 @@ local Options = {}
 local Tooltips = {}
 
 local BaseURL = "https://raw.githubusercontent.com/s2000s/Obsidian/refs/heads/main/"
-local CommitTime = "2026-08-16 03:37:00"
+local CommitTime = "2026-08-16 03:41:00"
 print(string.format("[Obsidian] Commit Time: %s", CommitTime))
 
 local CustomImageManager = {}
@@ -6510,6 +6510,12 @@ do
             function(Active: boolean)
                 DisplayButton.TextTransparency = (Active and SearchBox) and 1 or 0
 
+                if Active then
+                    DisplayContainer.Size = UDim2.fromOffset(GetDropdownMenuWidth(), 24)
+                else
+                    UpdateDropdownLayout()
+                end
+
                 ArrowImage.ImageTransparency = Active and 0 or 0.5
                 ArrowImage.Rotation = Active and 180 or 0
 
@@ -6561,6 +6567,10 @@ do
             local ItemCount = Count or #FilteredEntries
             local Y = math.clamp(ItemCount * ItemHeight, 0, Info.MaxVisibleDropdownItems * ItemHeight)
             local MenuWidth = GetDropdownMenuWidth()
+
+            if MenuTable.Active then
+                DisplayContainer.Size = UDim2.fromOffset(MenuWidth, 24)
+            end
 
             MenuTable.Menu.CanvasSize = UDim2.fromOffset(0, ItemCount * ItemHeight)
 
