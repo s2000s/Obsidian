@@ -30,8 +30,8 @@ local Options = {}
 local Tooltips = {}
 
 local BaseURL = "https://raw.githubusercontent.com/s2000s/Obsidian/refs/heads/main/"
-local GitVersion = "aacc55e"
-print(string.format("[Obsidian] Loaded Git version: %s", GitVersion))
+local BuildCode = "OB-20260816-01"
+print(string.format("[Obsidian] Build Code: %s", BuildCode))
 
 local CustomImageManager = {}
 local CustomImageManagerAssets = {
