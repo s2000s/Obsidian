@@ -6401,11 +6401,17 @@ do
             BackgroundTransparency = 1,
             Size = UDim2.new(1, 0, 0, 24),
             Text = "---",
-            TextTruncate = Enum.TextTruncate.AtEnd,
+            TextWrapped = false,
+            TextScaled = true,
             TextSize = 14,
             TextXAlignment = Enum.TextXAlignment.Left,
             ZIndex = 2,
             Parent = DisplayContainer,
+        })
+        New("UITextSizeConstraint", {
+            MinTextSize = 10,
+            MaxTextSize = 14,
+            Parent = DisplayButton,
         })
 
         New("UIPadding", {
@@ -6589,17 +6595,6 @@ do
                 if Str ~= "" and Info.FormatDisplayValue then
                     Str = tostring(Info.FormatDisplayValue(Str))
                 end
-            end
-
-            if #Str > 25 then
-                local Truncated = Str:sub(1, 22)
-                local LastSpace = Truncated:match("^.*() ")
-
-                if LastSpace and LastSpace > 1 then
-                    Truncated = Truncated:sub(1, LastSpace - 1)
-                end
-
-                Str = Truncated .. "..."
             end
 
             DisplayButton.Text = (Str == "" and "---" or Str)
