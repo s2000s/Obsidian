@@ -30,7 +30,7 @@ local Options = {}
 local Tooltips = {}
 
 local BaseURL = "https://raw.githubusercontent.com/s2000s/Obsidian/refs/heads/main/"
-local CommitTime = "2026-08-16 03:16:00"
+local CommitTime = "2026-08-16 03:24:00"
 print(string.format("[Obsidian] Commit Time: %s", CommitTime))
 
 local CustomImageManager = {}
@@ -6494,13 +6494,17 @@ do
             return ValueImage
         end
 
+        local GetDropdownMenuWidth
         local MenuTable = Library:AddContextMenu(
             DisplayContainer,
             function()
                 return UDim2.fromOffset((DisplayContainer.AbsoluteSize.X / Library.DPIScale), 0)
             end,
             function()
-                return { 0.5, DisplayContainer.AbsoluteSize.Y + 1.5 }
+                return {
+                    DisplayContainer.AbsoluteSize.X - (GetDropdownMenuWidth() * Library.DPIScale),
+                    DisplayContainer.AbsoluteSize.Y + 1.5,
+                }
             end,
             2,
             function(Active: boolean)
@@ -6528,7 +6532,7 @@ do
         local Pool = {}
         local FilteredEntries = {}
 
-        local function GetDropdownMenuWidth()
+        GetDropdownMenuWidth = function()
             local BaseWidth = DisplayContainer.AbsoluteSize.X / Library.DPIScale
             local Width = BaseWidth
             local SampleButton = Pool[1] and Pool[1].Button
