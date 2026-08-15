@@ -30,6 +30,9 @@ local Options = {}
 local Tooltips = {}
 
 local BaseURL = "https://raw.githubusercontent.com/s2000s/Obsidian/refs/heads/main/"
+local GitVersion = "aacc55e"
+print(string.format("[Obsidian] Loaded Git version: %s", GitVersion))
+
 local CustomImageManager = {}
 local CustomImageManagerAssets = {
     TransparencyTexture = {
